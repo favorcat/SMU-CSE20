@@ -29,8 +29,9 @@
 * [R/O](https://github.com/favorcat/SMU-CSE20/blob/master/데이터공학개론/CaseStudy.md#RO) → Repair Order 고객의 수리정보
 * [분석](https://github.com/favorcat/SMU-CSE20/blob/master/데이터공학개론/CaseStudy.md#RO) -> 객관적인 데이터를 통해 주관적인 판단을 유추한다.
 * [Auto-Regression](https://github.com/favorcat/SMU-CSE20/blob/master/데이터공학개론/CaseStudy.md#시계열분석) - 자기회귀, 자기상관
-* [Stationary Test](https://github.com/favorcat/SMU-CSE20/blob/master/데이터공학개론/CaseStudy.md#stage-2) - 정상성 테스트
-* [Unit Root Test](https://github.com/favorcat/SMU-CSE20/blob/master/데이터공학개론/CaseStudy.md#stage-2) - 단위근 검정 (Dickey Fuller가 발견, t기 t-k기까지 파고 들어간다.)
-* [Granger Causality Test](https://github.com/favorcat/SMU-CSE20/blob/master/데이터공학개론/CaseStudy.md#stage-3) - 그랜저 인과관계 검증
-* [GIRFs](https://github.com/favorcat/SMU-CSE20/blob/master/데이터공학개론/CaseStudy.md#stage-4) - 일반화된 충격반응함수 (Generalized Impluse Response Functions)
-* [Wear-in Time](https://github.com/favorcat/SMU-CSE20/blob/master/데이터공학개론/CaseStudy.md#stage-4) - 시계열적으로 얼마나 빠른가(소요시간)
+* [Stationary Test](https://github.com/favorcat/SMU-CSE20/blob/master/데이터공학개론/CaseStudy.md#stage2) - 정상성 테스트
+* [Unit Root Test](https://github.com/favorcat/SMU-CSE20/blob/master/데이터공학개론/CaseStudy.md#stage2) - 단위근 검정 (Dickey Fuller가 발견, t기 t-k기까지 파고 들어간다.)
+* [Granger Causality Test](https://github.com/favorcat/SMU-CSE20/blob/master/데이터공학개론/CaseStudy.md#stage3) - 그랜저 인과관계 검증
+* [GIRFs](https://github.com/favorcat/SMU-CSE20/blob/master/데이터공학개론/CaseStudy.md#stage4) - 일반화된 충격반응함수 (Generalized Impluse Response Functions)
+* [Wear-in Time](https://github.com/favorcat/SMU-CSE20/blob/master/데이터공학개론/CaseStudy.md#stage4) - 시계열적으로 얼마나 빠른가(소요시간)
+* [GFEVD](https://github.com/favorcat/SMU-CSE20/blob/master/데이터공학개론/CaseStudy.md#stage-5--stage-4) - 일반화된 예측오차 분산분해 (Generalized Forecast Error Variance Decomposition)

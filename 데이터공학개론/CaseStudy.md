@@ -21,11 +21,12 @@
 * [R/O](#RO) → Repair Order 고객의 수리정보
 * [분석](#RO) -> 객관적인 데이터를 통해 주관적인 판단을 유추한다.
 * [Auto-Regression](#시계열분석) - 자기회귀, 자기상관
-* [Stationary Test](#stage-2) - 정상성 테스트
-* [Unit Root Test](#stage-2) - 단위근 검정 (Dickey Fuller가 발견, t기 t-k기까지 파고 들어간다.)
-* [Granger Causality Test](#stage-3) - 그랜저 인과관계 검증
-* [GIRFs](#stage-4) - 일반화된 충격반응함수 (Generalized Impluse Response Functions)
-* [Wear-in Time](#stage-4) - 시계열적으로 얼마나 빠른가(소요시간)
+* [Stationary Test](#stage2) - 정상성 테스트
+* [Unit Root Test](#stage2) - 단위근 검정 (Dickey Fuller가 발견, t기 t-k기까지 파고 들어간다.)
+* [Granger Causality Test](#stage3) - 그랜저 인과관계 검증
+* [GIRFs](#stage4) - 일반화된 충격반응함수 (Generalized Impluse Response Functions)
+* [Wear-in Time](#stage4) - 시계열적으로 얼마나 빠른가(소요시간)
+* [GFEVD](#stage-5--stage-4) - 일반화된 예측오차 분산분해 (Generalized Forecast Error Variance Decomposition)
 
   비정형 데이터 분석 방법 - Text 분석, SNA(사회관계망 분석)
 
