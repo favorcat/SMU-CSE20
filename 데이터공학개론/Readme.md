@@ -7,7 +7,9 @@
     - [1. Subway Transfer System 개선](https://github.com/favorcat/SMU-CSE20/blob/master/데이터공학개론/CaseStudy.md#11-Subway-Transfer-System-개선)
     - [2. Link Analysis 활용 분석 모델](https://github.com/favorcat/SMU-CSE20/blob/master/데이터공학개론/CaseStudy.md#12-Link-Analysis-활용-분석-모델)
     - [3. 전통적인 수요예측 분석 모델](https://github.com/favorcat/SMU-CSE20/blob/master/데이터공학개론/CaseStudy.md#13-전통적인-수요예측-분석-모델)
-    - [시계열분석](https://github.com/favorcat/SMU-CSE20/blob/master/데이터공학개론/CaseStudy.md#132-시계열분석)
+        - [시계열분석](https://github.com/favorcat/SMU-CSE20/blob/master/데이터공학개론/CaseStudy.md#132-시계열분석)
+    - [4. 제조 공정 모델](https://github.com/favorcat/SMU-CSE20/blob/master/데이터공학개론/CaseStudy.md#14-제조-공정-모델)
+        - [금융](https://github.com/favorcat/SMU-CSE20/blob/master/데이터공학개론/CaseStudy.md#142-금융)
 2. Analystic Methodology
 3. Mining - 분석(2번과 다른 분석 방법)
 4. 비정형 (Text)
@@ -35,3 +37,4 @@
 * [GIRFs](https://github.com/favorcat/SMU-CSE20/blob/master/데이터공학개론/CaseStudy.md#stage4) - 일반화된 충격반응함수 (Generalized Impluse Response Functions)
 * [Wear-in Time](https://github.com/favorcat/SMU-CSE20/blob/master/데이터공학개론/CaseStudy.md#stage4) - 시계열적으로 얼마나 빠른가(소요시간)
 * [GFEVD](https://github.com/favorcat/SMU-CSE20/blob/master/데이터공학개론/CaseStudy.md#stage-5--stage-4) - 일반화된 예측오차 분산분해 (Generalized Forecast Error Variance Decomposition)
+* [Prospect Theory](https://github.com/favorcat/SMU-CSE20/blob/master/데이터공학개론/CaseStudy.md#보험-금액을-산정하는-기준) - 기대이론(츠버스키)
