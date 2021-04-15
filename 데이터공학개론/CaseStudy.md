@@ -7,6 +7,8 @@
     - [시계열분석](#132-시계열분석)
 - [4. 제조 공정 모델](#14-제조-공정-모델)
     - [금융](#142-금융)
+- [5. 유통 관련 분석 사례](#15-유통-관련-분석-사례)
+- [6. 금융 관련 분석 사례](#16-금융-관련-분석-사례)
 
 ### 용어정리
 
@@ -30,7 +32,11 @@
 * [Wear-in Time](#stage4) - 시계열적으로 얼마나 빠른가(소요시간)
 * [GFEVD](#stage-5--stage-4) - 일반화된 예측오차 분산분해 (Generalized Forecast Error Variance Decomposition)
 * [Prospect Theory](#보험-금액을-산정하는-기준) - 기대이론(츠버스키)
+* [Movement Pattern Analysis](#15-유통-관련-분석-사례) - 동선 분석
+* [Triangulation](#15-유통-관련-분석-사례) - 삼각 측량
+* [Dead reckoning](#15-유통-관련-분석-사례) - 추측 
 
+    
   비정형 데이터 분석 방법 - Text 분석, SNA(사회관계망 분석)
 
 ### 사업의 목적
@@ -189,3 +195,34 @@ __SNA__
 #### 1.4.2.3 카드회사
 - 신용공여 : 한달동안 버틸 기간
 - 수익 : 수수료
+
+### 1.5 유통 관련 분석 사례
+#### Coex Mall
+
+센서 기반의 [동선분석(Movement Pattern Analysis)](#용어정리)    
+- wifi를 얼마나 많은 사람들이 activate 해놓는가에 대한 분석
+- mobile에서 나오는 시그널을 분석한다.
+    - wifi를 켜놓는다.
+    - LTE로 하겠다 -> wifi를 꺼놓는다.
+    - Receiver가 필요하다.
+ 
+ 신뢰성 기반 조사    
+ 10초 이상 머문 사람들을 detect한다.    
+ Detect하는 기술 - [Triangulation(삼각 측량)](#용어정리)    
+ [Dead reckoning](#용어정리)    
+     
+ Movement Pattern - 어떤 결과를 초래했는가?    
+ 모델을 만든다 -> 추정해서 미래를 예측한다.    
+
+### 1.6 금융 관련 분석 사례
+#### 은행
+
+금융정보는 나눈다    
+- 소호분석
+- 고객경로분석 PATH
+    - 해지 직전의 징후 - Retention
+
+path를 통해 나가려는 사람, 불만 많은 사람 등을 걸러낼 수 있다.    
+사전에 방지하거나 응원할 수 있다.
+
+Customer Experience -> Customer Journey

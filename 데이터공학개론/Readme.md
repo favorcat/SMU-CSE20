@@ -10,7 +10,16 @@
         - [시계열분석](https://github.com/favorcat/SMU-CSE20/blob/master/데이터공학개론/CaseStudy.md#132-시계열분석)
     - [4. 제조 공정 모델](https://github.com/favorcat/SMU-CSE20/blob/master/데이터공학개론/CaseStudy.md#14-제조-공정-모델)
         - [금융](https://github.com/favorcat/SMU-CSE20/blob/master/데이터공학개론/CaseStudy.md#142-금융)
-2. Analystic Methodology
+    - [5. 유통 관련 분석 사례](https://github.com/favorcat/SMU-CSE20/blob/master/데이터공학개론/CaseStudy.md#15-유통-관련-분석-사례)
+    - [6. 금융 관련 분석 사례](https://github.com/favorcat/SMU-CSE20/blob/master/데이터공학개론/CaseStudy.md#16-금융-관련-분석-사례)
+2. [Analystic Methodology](https://github.com/favorcat/SMU-CSE20/blob/master/데이터공학개론/AnalysisMethodology.md) - 분석방법론(전통적인/수학적인 분석방법)
+    - [What is Clustering?](https://github.com/favorcat/SMU-CSE20/blob/master/데이터공학개론/AnalysisMethodology.md#1-what-is-clustering)
+        - [1.1 Predictive vs Descriptive Analysis](https://github.com/favorcat/SMU-CSE20/blob/master/데이터공학개론/AnalysisMethodology.md#11-predictive-vs-descriptive-analysis)
+    - Partitional Clustering : K-means Clustering
+    - Hierarchical Clustering
+    - Association Rule
+    - What is Dimensionality Reduction?
+    - Principle Component Analysis (PCA)
 3. Mining - 분석(2번과 다른 분석 방법)
 4. 비정형 (Text)
 5. SNA
@@ -38,3 +47,8 @@
 * [Wear-in Time](https://github.com/favorcat/SMU-CSE20/blob/master/데이터공학개론/CaseStudy.md#stage4) - 시계열적으로 얼마나 빠른가(소요시간)
 * [GFEVD](https://github.com/favorcat/SMU-CSE20/blob/master/데이터공학개론/CaseStudy.md#stage-5--stage-4) - 일반화된 예측오차 분산분해 (Generalized Forecast Error Variance Decomposition)
 * [Prospect Theory](https://github.com/favorcat/SMU-CSE20/blob/master/데이터공학개론/CaseStudy.md#보험-금액을-산정하는-기준) - 기대이론(츠버스키)
+* [Movement Pattern Analysis](https://github.com/favorcat/SMU-CSE20/blob/master/데이터공학개론/CaseStudy.md#15-유통-관련-분석-사례) - 동선 분석
+* [Triangulation](https://github.com/favorcat/SMU-CSE20/blob/master/데이터공학개론/CaseStudy.md#15-유통-관련-분석-사례) - 삼각 측량
+* [Dead reckoning](https://github.com/favorcat/SMU-CSE20/blob/master/데이터공학개론/CaseStudy.md#15-유통-관련-분석-사례) - 추측
+* [Predictive](https://github.com/favorcat/SMU-CSE20/blob/master/데이터공학개론/AnalysisMethodology.md#1-what-is-clustering) - 예측적
+* [Descriptive](https://github.com/favorcat/SMU-CSE20/blob/master/데이터공학개론/AnalysisMethodology.md#1-what-is-clustering) - 서술적
