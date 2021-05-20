@@ -1,0 +1,103 @@
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Malgun Gothic', 'Open Sans', 'Helvetica Neue', sans-serif;
+    text-align: center;
+}
+
+header{
+    width: 100%;
+    height: 15%;
+    background: gray;
+    color: white;
+}
+
+nav{
+    width: 20%;
+    float: left;
+    text-align: left;
+}
+
+section{
+    width: 80%;
+    float: left;
+    text-align: left;
+}
+
+footer{
+    width: 100%;
+    height: 15%;
+    clear: both;
+    background: lightgray;
+}
+
+li:hover, a:hover{
+    text-decoration: underline;
+    color: red !important;
+}
+
+a:link, a:visited{
+    text-decoration: none;
+    color: black;
+}
+
+.title{
+    font-size: 28px;
+    font-weight: bold;
+    padding-top: 20px;
+}
+
+.description{
+    padding-top: 15px;
+}
+
+.wrapper{
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+.section-title{
+    font-size: 23px;
+    font-weight: bold;
+    padding-top: 20px;
+}
+
+.main{
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.mac-air, .mac-pro13, .mac-pro16, .iMac24{
+    display: flex;
+    flex-direction: row;
+}
+
+img{
+    width: 220px;
+    margin: 20px;
+}
+
+.footer-wrapper{
+    padding-top: 20px;
+    padding-bottom: 30px;
+    background: lightgray;
+}
+
+hr{
+    color: gray;
+}
+
+survey{
+    margin: 20px;
+}
+
+form{
+    padding: 30px;
+    text-align: left;
+    height: 62%;
+}
+
+.survey-title{
+    font-weight: bold;
+}

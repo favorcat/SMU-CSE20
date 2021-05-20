@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Survey</title>
+        <meta charset="utf-8">
+        <link rel="stylesheet" href="./style.css">
+    </head>
+
+    <body>
+        <header>
+            <div class='title'>Survey</div>
+            <div class="description">
+                구매하신 제품에 대한 설문조사입니다.
+            </div>
+        </header>
+        
+        <form name='survey' method='get'>
+            <a class='survey-title'>직업</a>
+            <input type='radio' name='job' value='student'> 학생
+            <input type='radio' name='job' value='officeWorkder'> 직장인
+            <input type='radio' name='job' value='none'> 무직
+            
+            <br>
+            <a class='survey-title'>나이</a>
+            <input type='radio' name='age' value='10'> 10대
+            <input type='radio' name='age' value='20'> 20대
+            <input type='radio' name='age' value='30'> 30대
+            <input type='radio' name='age' value='40'> 40대 이상
+
+            <br>
+            <a class='survey-title'>성별</a>
+            <input type='radio' name='gender' value='male'> 남자
+            <input type='radio' name='gender' value='female'> 여자
+            <input type='radio' name='gender' value='etc'> 기타
+            <input type='radio' name='gender' value='none'> 선택안함
+            
+            <br><br>
+            <input list='purchase' placeholder="구매한 제품 선택"/>
+            <datalist id='purchase'>
+                <option value='MacBook Air'>
+                <option value='MacBook Pro 13'>
+                <option value='MacBook Pro 16'>
+                <option value='iMac 24'>
+            </datalist>
+
+
+            <br><br>
+            <input type='submit' value='제출하기' onclick='alert("제출 완료되었습니다.")'>
+        </form>
+
+        <footer>
+            <div class='footer-wrapper'>
+            © 2021 favorcat. All rights reserved.
+            </div>
+        </footer>
+    </body>
+</html>
