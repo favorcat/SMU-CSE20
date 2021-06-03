@@ -1,0 +1,24 @@
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>면적 변환기</title>
+        <meta charset="utf-8">
+        <link rel="stylesheet" href="./style.css">
+
+        <script>
+            function cal(chk) {
+                if (chk==1) {
+                    document.getElementById('value2').value=parseFloat(document.getElementById('value1').value)*3.3058;
+                } else {
+                    document.getElementById('value1').value=parseFloat(document.getElementById('value2').value)/3.3058;
+                }
+            }
+        </script>
+    </head>
+
+    <body>
+        <input type="text" id="value1" onkeyup="cal(1)">평
+        <input type="text" id="value2" onkeyup="cal(0)"> m^2
+    </body>
+</html>
