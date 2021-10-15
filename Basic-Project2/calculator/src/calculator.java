@@ -87,6 +87,10 @@ public class calculator extends JFrame {
                 if (!operator.equals("")) y += s;
                 else x += s;
                 res.setText(x + operator + y);
+            } else if (s.charAt(0) == '√'){
+                if (!operator.equals("")) y = Double.toString(Math.sqrt(Double.parseDouble(y)));
+                else x = Double.toString(Math.sqrt(Double.parseDouble(x)));
+                res.setText(x + operator + y);
             } else if (s.charAt(0) == 'C'){
                 x = operator = y = "";
                 res.setText(x + operator + y);
