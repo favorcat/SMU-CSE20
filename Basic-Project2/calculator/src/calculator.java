@@ -4,10 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class calculator extends JFrame {
-    static int operator = 0;
-    static double x = 0;
-    static double y = 0;
-    static double result = 0;
+    String x, operator, y;
     JTextField res;
 
     public calculator() {
@@ -21,6 +18,7 @@ public class calculator extends JFrame {
 
         frame.getContentPane().setLayout(null);
 
+        x = operator = y = "";
         res = new JTextField(40);
         JPanel numberContainer = new JPanel();
         numberContainer.setBounds(0,0,500,30); // 가로 세로위치, 가로 세로 길이
@@ -83,40 +81,40 @@ public class calculator extends JFrame {
     class MyActionListener implements ActionListener{
         @Override
         public void actionPerformed(ActionEvent e) {
-            JButton b = (JButton) e.getSource();
-            if(b.getText().equals("+")){
-                x = Double.parseDouble(res.getText());
-                operator = 1;
-                res.setText("");
-            } else if(b.getText().equals("-")){
-                x = Double.parseDouble(res.getText());
-                operator = 2;
-                res.setText("");
-            } else if(b.getText().equals("*")){
-                x = Double.parseDouble(res.getText());
-                operator = 3;
-                res.setText("");
-            } else if(b.getText().equals("/")){
-                x = Double.parseDouble(res.getText());
-                operator = 4;
-                res.setText("");
-            } else if(b.getText().equals("√")){
-                x = Double.parseDouble(res.getText());
-                operator = 5;
-                res.setText("");
-            } else if(b.getText().equals("Enter")){
-                y = Double.parseDouble(res.getText());
-                switch (operator) {
-                    case 1 -> result = x + y;
-                    case 2 -> result = x - y;
-                    case 3 -> result = x * y;
-                    case 4 -> result = x / y;
-                    default -> result = 0;
+            String s = e.getActionCommand();
+
+            if(('0' <= s.charAt(0) && s.charAt(0) <= '9') || s.charAt(0) == '.') {
+                if (!operator.equals("")) y += s;
+                else x += s;
+                res.setText(x + operator + y);
+            } else if (s.charAt(0) == 'C'){
+                x = operator = y = "";
+                res.setText(x + operator + y);
+            } else if (s.charAt(0) == 'E'){
+                double d = switch (operator) {
+                    case "+" -> (Double.parseDouble(x) + Double.parseDouble(y));
+                    case "-" -> (Double.parseDouble(x) - Double.parseDouble(y));
+                    case "/" -> (Double.parseDouble(x) / Double.parseDouble(y));
+                    default -> (Double.parseDouble(x) * Double.parseDouble(y));
+                };
+                x = Double.toString(d);
+                res.setText(x);
+                x = operator = y = "";
+            } else {
+                if (operator.equals("") || y.equals("")) operator = s;
+                else {
+                    double d = switch (operator) {
+                        case "+" -> (Double.parseDouble(x) + Double.parseDouble(y));
+                        case "-" -> (Double.parseDouble(x) - Double.parseDouble(y));
+                        case "/" -> (Double.parseDouble(x) / Double.parseDouble(y));
+                        default -> (Double.parseDouble(x) * Double.parseDouble(y));
+                    };
+                    x = Double.toString(d);
+                    operator = s;
+                    y = "";
                 }
-                res.setText(""+result);
-            } else if(b.getText().equals("Clear")){
-                res.setText("");
-            } else res.setText(res.getText().concat(b.getText()));
+                res.setText(x + operator + y);
+            }
         }
     }
 
