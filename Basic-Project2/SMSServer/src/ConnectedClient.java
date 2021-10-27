@@ -47,6 +47,11 @@ public class ConnectedClient extends Thread{
                     String id = stk.nextToken();
                     String pass = stk.nextToken();
                     // 로그인을 위한 아이디와 암호 확인 작업 필요
+                    if(server.lc.check(id, pass)){
+                        dataOutStream.writeUTF("LOGIN_OK");
+                    } else {
+                        dataOutStream.writeUTF("LOGIN_FAIL");
+                    }
                 }
             }
         } catch(Exception e) {
