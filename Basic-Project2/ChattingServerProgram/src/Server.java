@@ -15,7 +15,7 @@ public class Server {
             System.out.println("Server> Server Socket is Created...");
             while(true) {
                 Socket socket = server.ss.accept();
-                ConnectedClient c = new ConnectedClient(socket);
+                ConnectedClient c = new ConnectedClient(socket, server);
                 server.clients.add(c);
                 c.start();
             }
@@ -34,9 +34,13 @@ class ConnectedClient extends Thread{
     DataOutputStream dataOutStream;
     InputStream inStream;
     DataInputStream dataInStream;
+    String msg;
+    String uName;
+    Server server;
 
-    ConnectedClient(Socket _s){
+    ConnectedClient(Socket _s, Server _ss){
         this.socket = _s;
+        this.server = _ss;
     }
 
     @Override
@@ -49,9 +53,21 @@ class ConnectedClient extends Thread{
             dataInStream = new DataInputStream(inStream);
 
             dataOutStream.writeUTF("Welcome to this server!!!");
+
+            uName = dataInStream.readUTF();
+
             while(true) {
-                String msg = dataInStream.readUTF();
-                System.out.println("Server> " + this.socket.toString() + ": " + msg);
+                msg = dataInStream.readUTF();
+                System.out.println("Server> " + this.uName + ": " + msg);
+
+                for(int i=0; i<server.clients.size(); i++){
+                    if( !(uName.equals(server.clients.get(i).uName)) ) {
+                        outStream = server.clients.get(i).socket.getOutputStream();
+                        dataOutStream = new DataOutputStream(outStream);
+                        dataOutStream.writeUTF(uName + "sent : " + msg);
+                    }
+                }
+
             }
 
         } catch(IOException e) {
