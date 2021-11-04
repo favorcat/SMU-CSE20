@@ -36,6 +36,7 @@ public class MainFrame extends JFrame{
     //메뉴 제작용
     JMenuBar mb = new JMenuBar();
     JMenu homeMenu = new JMenu("HOME");
+    // JMenu manageMenu = new JMenu("Manage"); // 객체 생성
     JMenuItem openMI = new JMenuItem("OPEN");
     JMenuItem newMI = new JMenuItem("NEW");
     JMenuItem exitMI = new JMenuItem("EXIT");
@@ -60,11 +61,13 @@ public class MainFrame extends JFrame{
 
 //homeMenu 추가
         homeMenu.add(newMI);
-        homeMenu.addSeparator();
+        homeMenu.addSeparator(); // 구분선
         homeMenu.add(openMI);
         homeMenu.addSeparator();
         homeMenu.add(exitMI);
+
         mb.add(homeMenu);
+        // mb.add(new JMenu("Manage")); // 익명 객체
         setJMenuBar(mb);
 
 // 패널 추가 작업
@@ -77,19 +80,19 @@ public class MainFrame extends JFrame{
 
 
 // westPannel 컴포넌트 작업
-        comboBox = new JComboBox(departments);
-        root = new DefaultMutableTreeNode("학과");
-        tree = new JTree(root);
+        comboBox = new JComboBox(departments); // 문자열 배열의 각 요소가 하나의 아이템으로 들어감 -> 드롭다운박스처럼
+        root = new DefaultMutableTreeNode("학과"); // 트리 객체 생성을 위해 필요한 것
+        tree = new JTree(root); // 트리 객체
         for(int i=0; i<departments.length; i++ ) {
-            DefaultMutableTreeNode node = new DefaultMutableTreeNode(departments[i]);
-            root.add(node);
-            treeModel = (DefaultTreeModel) tree.getModel();
-            treeModel.setRoot(root);
+            DefaultMutableTreeNode node = new DefaultMutableTreeNode(departments[i]); // 반복문으로 노드 생성
+            root.add(node); // 루트에 추가
+            treeModel = (DefaultTreeModel) tree.getModel(); // 필드로 선언했던 자신이 가지고 있는 treeModel을 넘겨줌
+            treeModel.setRoot(root); // 루트를 새롭게 갱신한다.
         }
 
-
+        // 크기 조절
         comboBox.setPreferredSize(new Dimension(160, 20));
-        titleLabel.setPreferredSize(new Dimension(160, 20));
+        titleLabel.setPreferredSize(new Dimension(160, 20)); // select student type 아래 부분
         tree.setPreferredSize(new Dimension(160, 140));
 
 // westPanel.add
@@ -101,15 +104,15 @@ public class MainFrame extends JFrame{
 //westPanel.add(exitBtn);
 
 // 센터 패널 컴포넌트 작업
-        tableModel = new DefaultTableModel(students, columNames);
-        table = new JTable(tableModel);
-        JScrollPane sp = new JScrollPane(table);
+        tableModel = new DefaultTableModel(students, columNames); // column -> 타이틀
+        table = new JTable(tableModel);  // 테이블이 생성되때 테이블모델이 있어야 함. 모델 -> 내용을 가지고 있는 것
+        JScrollPane sp = new JScrollPane(table); // 스크롤이 달려있는 Pane 생성 for table, scrollPane 위에 table이 존재
 
         centerPanel.setLayout(new BorderLayout());
         centerPanel.add(sp, BorderLayout.CENTER);
 
-        setSize(900, 300);
+        setSize(900, 300); // 메인 프레임의 크기를 설정
     }
 
-
+    // 여기서 각 요소들에 이벤트 트리거를 생성해 주어야 함. 과제에서는 DB를 연동시켜야 함.
 }
