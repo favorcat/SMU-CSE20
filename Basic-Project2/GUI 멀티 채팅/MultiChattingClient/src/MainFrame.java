@@ -5,28 +5,40 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class MainFrame extends JFrame implements ActionListener {
+public class MainFrame extends JFrame{
     // 베이스 판넬
     JPanel basePanel = new JPanel(new BorderLayout());
     // 채팅, 텍스트 입력 판넬
     JPanel centerPanel = new JPanel(new BorderLayout());
     // 접속자 목록 보여줄 판넬
     JPanel eastPanel = new JPanel();
+    JTextArea onlineUser = new JTextArea("",34,10);
+    JScrollPane onlineSP = new JScrollPane(onlineUser);
+
     // centerPanel
-    JTextArea textArea = new JTextArea();
+    JTextArea textArea = new JTextArea("",33,33);
     JScrollPane sp = new JScrollPane(textArea);
 
     JPanel sendPanel = new JPanel(new BorderLayout());
-    JTextField textField = new JTextField();
-    JButton sendBtn = new JButton();
+    JTextField textField = new JTextField(35);
+    JButton sendBtn = new JButton("전송");
     // eastPanel 컴포넌트
     //JList onlineMember = new JList();
 
-    boolean isFirst = true;
-    Socket socket;
+    MyConnector connector;
+    Operator mainOperator = null;
+    MessageListener ml;
 
-    public MainFrame() {
-        //this.socket = socket;
+    boolean flag = false;
+
+    public MainFrame(Operator _o) {
+        mainOperator = _o;
+        connector = _o.connector;
+        ActionListener al = new MyActionListener();
+        ml = new MessageListener(connector.dataInStream, this);
+
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setTitle("멀티 채팅프로그램");
 
         basePanel.add(centerPanel, BorderLayout.CENTER);
         basePanel.add(eastPanel, BorderLayout.EAST);
@@ -38,16 +50,26 @@ public class MainFrame extends JFrame implements ActionListener {
         sendPanel.add(sendBtn, BorderLayout.EAST);
         centerPanel.add(sendPanel, BorderLayout.SOUTH);
 
-        basePanel.setVisible(true);
+        eastPanel.add(onlineSP);
+        onlineUser.setEditable(false);
+
+        sendBtn.addActionListener(al);
+        this.add(basePanel, BorderLayout.CENTER);
+        this.setSize(650,590);
     }
 
-    public void actionPerformed(ActionEvent e) {
-        if(e.getSource() == sendBtn){
-            if(textField.getText().equals("")) return;
-            //textArea.append("["+ name + "] : " + textField.getText() + "\n");
-            textField.setText("");
-        } else {
-            this.dispose();
+    class MyActionListener implements ActionListener {
+        public void actionPerformed(ActionEvent e) {
+            JButton b =  (JButton)e.getSource();
+            if (b.getText().equals("전송")) {
+                if (textField.getText().equals("")) return;
+                else {
+                   connector.sendChat(textField.getText());
+                }
+                textField.setText("");
+            } else {
+                dispose();
+            }
         }
     }
 }

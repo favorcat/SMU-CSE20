@@ -3,13 +3,16 @@ import java.io.IOException;
 import java.net.*;
 import java.net.SocketException;
 import java.util.ArrayList;
+import java.util.StringTokenizer;
 
 public class Server {
     ServerSocket ss = null;
     ArrayList<ConnectedClient> clients = new ArrayList<ConnectedClient>();
+    LoginChecker lc;
 
     public static void main(String[] args) {
         Server server = new Server();
+        server.lc = new LoginChecker();
         try {
             server.ss = new ServerSocket(60000);
             System.out.println("Server> Server Socket is Created...");
@@ -30,13 +33,18 @@ public class Server {
 
 class ConnectedClient extends Thread{
     Socket socket;
+    Server server;
+
     OutputStream outStream;
     DataOutputStream dataOutStream;
     InputStream inStream;
     DataInputStream dataInStream;
+
     String msg;
     String uName;
-    Server server;
+
+    String loginTag = "LOGIN";
+    String chatTag = "CHAT";
 
     ConnectedClient(Socket _s, Server _ss){
         this.socket = _s;
@@ -52,27 +60,44 @@ class ConnectedClient extends Thread{
             inStream = this.socket.getInputStream();
             dataInStream = new DataInputStream(inStream);
 
-            dataOutStream.writeUTF("Welcome to this server!!!");
-
-            uName = dataInStream.readUTF();
-            dataOutStream.writeUTF(uName + "님이 입장하였습니다.");
+            //dataOutStream.writeUTF("Welcome to this server!!!");
+            //uName = dataInStream.readUTF();
+            //dataOutStream.writeUTF(uName + "님이 입장하였습니다.");
 
             while(true) {
                 msg = dataInStream.readUTF();
-                System.out.println("Server> " + this.uName + ": " + msg);
+                StringTokenizer stk = new StringTokenizer(msg, "//");
+                String token = stk.nextToken();
 
-                for(int i=0; i<server.clients.size(); i++){
-                    if( !(uName.equals(server.clients.get(i).uName)) ) {
-                        outStream = server.clients.get(i).socket.getOutputStream();
-                        dataOutStream = new DataOutputStream(outStream);
-                        dataOutStream.writeUTF("["+ uName + "] : " + msg);
+                if(token.equals(loginTag)){
+                    String id = stk.nextToken();
+                    String pass = stk.nextToken();
+
+                    // 로그인을 위한 아이디와 암호 확인 작업 필요
+                    if(server.lc.check(id, pass)){
+                        dataOutStream.writeUTF("LOGIN_OK");
+                        uName = server.lc.getName(id);
+                    } else {
+                        dataOutStream.writeUTF("LOGIN_FAIL");
+                    }
+
+                } else if (token.equals(chatTag)){
+                    msg = stk.nextToken();
+                    System.out.println("Server> [" + this.uName + "] : " + msg);
+
+                    for(int i=0; i<server.clients.size(); i++){
+                        if( !(uName.equals(server.clients.get(i).uName)) ) {
+                            outStream = server.clients.get(i).socket.getOutputStream();
+                            dataOutStream = new DataOutputStream(outStream);
+                            dataOutStream.writeUTF("["+ uName + "] : " + msg);
+                        }
                     }
                 }
-
             }
 
         } catch(IOException e) {
-            System.out.println("Server> 입출력 예외 발생");
+            System.out.println("Server> 입출력 예외 발생22");
+            e.printStackTrace();
         }
     }
 }
