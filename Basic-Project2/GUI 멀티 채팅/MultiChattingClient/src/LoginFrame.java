@@ -1,17 +1,17 @@
 import javax.swing.*;
-import javax.swing.event.*;
 import java.awt.*;
 import java.awt.event.*;
 
-
+// 쓰레드 인터페이스 사용
 public class LoginFrame extends JFrame implements Runnable{
     JPanel panel = new JPanel(new FlowLayout()); // 레이아웃 선언
-    JButton enter = new JButton("Login"); // Button enter 선언
-    JButton cancel = new JButton("Cancel"); // Button enter 선언
+    JButton enter = new JButton("Login"); // 로그인 버튼  선언
+    JButton cancel = new JButton("Cancel"); // 취소 버튼 선언
     JTextField typeId = new JTextField(); // id 받은곳  선언
     JPasswordField typePassword = new JPasswordField(); // password 받은곳 선언 받으면 ** < 처럼 나옴
     JLabel id = new JLabel("I   D"); // 라벨 type id
     JLabel password = new JLabel("Password"); // 라벨 type password
+    // 커넥터와 오퍼레이터를 들고 있어야 로그인 기능을 구현할 수 있음
     MyConnector connector;
     Operator mainOperator = null;
     public LoginFrame(Operator _o) {
@@ -65,6 +65,7 @@ public class LoginFrame extends JFrame implements Runnable{
                     mainOperator.mf.flag = true; // 채팅 상태로 변경
                     mainOperator.mf.setVisible(true);
                     dispose();
+                    // 메인프레임에서 메세지리스너 시작
                     mainOperator.mf.ml.start();
                 }else {
                     System.out.println("Log in Error~~~");

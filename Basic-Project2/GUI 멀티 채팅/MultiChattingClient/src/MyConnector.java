@@ -2,22 +2,23 @@ import java.io.*;
 import java.net.*;
 
 public class MyConnector {
+    // 소켓 생성
     Socket mySocket = null;
 
     OutputStream outStream = null;
     DataOutputStream dataOutStream = null;
-
     InputStream inStream = null;
     DataInputStream dataInStream = null;
 
     //MessageListener ml = null;
 
+    // 보내는 문자열이 로그인인지 채팅인지 태그를 달기 위해 선언
     final String loginTag = "LOGIN";
     final String chatTag = "CHAT";
 
     MyConnector(){
         try {
-            // socket 생성
+            // 서버와 같은 포트로 socket 생성
             mySocket = new Socket("localhost", 60000);
             System.out.println("Client> 서버로 연결되었습니다.");
 
@@ -26,41 +27,49 @@ public class MyConnector {
             dataOutStream = new DataOutputStream(outStream);
             inStream = mySocket.getInputStream();
             dataInStream =  new DataInputStream(inStream);
-            //ml = new MessageListener(dataInStream);
-            //ml.start();
 
         } catch(Exception e) {
             e.printStackTrace();
         }
     }
 
+    // 서버로 로그인 정보를 넘기기 위한 메소드
     boolean sendLoginInformation(String uid, String upass){
+        // 보낼 문자열 초기화
         String msg = "";
         try {
+            // 입력받은 ID와 PW 앞에 로그인 태그를 붙여서 데이터 전송
             dataOutStream.writeUTF(loginTag + "//" + uid + "//" + upass);
-            System.out.println("><");
+            // 서버로부터 받아온 로그인 성공/실패의 boolean 값 받아옴
             msg = dataInStream.readUTF();
-            System.out.println(msg);
+            System.out.println("로그인(서버응답): "+ msg);
         } catch(Exception e) {
             e.printStackTrace();
         }
+        // 로그인 성공했으면 true값 반환
         return msg.equals("LOGIN_OK");
     }
 
+    // 채팅창의 전송 버튼 누를 떄 실행할 메소드, 매개변수는 입력받은 텍스트
     void sendChat(String chat){
         try {
+            // 입력받은 텍스트로 앞에 채팅 태그를 달아서 데이터 전송
             dataOutStream.writeUTF(chatTag + "//" + chat);
-            System.out.println("sendcAHT");
+            System.out.println("sendCAHT");
         } catch(Exception e) {
             e.printStackTrace();
         }
     }
 }
 
+// 스레드를 활용한 클라이언트가 서버에서 보내는 채팅메세지를 받기 위한 클래스
 class MessageListener extends Thread {
+    // 데이터를 불러오기 위해 선언
     DataInputStream dataInStream;
+    // 메인플레임을 들고 있어야 메인프레임의 textarea에 채팅메세지를 append할 수 있음
     MainFrame mf;
 
+    // 생성자로 DataInputStream과 메인프레임 생성
     MessageListener(DataInputStream data, MainFrame _mf){
         dataInStream = data;
         mf = _mf;
@@ -69,13 +78,13 @@ class MessageListener extends Thread {
     @Override
     public void run() {
         try {
-            System.out.println(mf.flag);
+            System.out.println("MainFrame flag >> " + mf.flag);
             //if (mf.flag){
                 while(true) {
-                    System.out.println("RURNRURN");
+                    // 스레드가 계속 돌면서 데이터를 받아옴
                     String msg = dataInStream.readUTF();
                     System.out.println(msg);
-                    mf.textArea.append(msg);
+                    mf.textArea.append(msg+"\n");
                 }
             //}
         } catch(Exception e) {

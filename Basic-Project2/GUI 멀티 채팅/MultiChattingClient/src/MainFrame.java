@@ -1,6 +1,4 @@
 import javax.swing.*;
-import javax.swing.border.Border;
-import java.net.Socket;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -60,11 +58,13 @@ public class MainFrame extends JFrame{
 
     class MyActionListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
+            // 전송 버튼을 눌렀을 때, 채팅메세지를 서버로 전송
             JButton b =  (JButton)e.getSource();
             if (b.getText().equals("전송")) {
                 if (textField.getText().equals("")) return;
                 else {
                    connector.sendChat(textField.getText());
+                   textArea.append("[나]: "+ textField.getText()+"\n");
                 }
                 textField.setText("");
             } else {

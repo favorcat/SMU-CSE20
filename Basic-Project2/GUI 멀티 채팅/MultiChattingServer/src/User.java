@@ -1,3 +1,4 @@
+// 유저 객체 생성
 public class User {
     String id = null;
     String pass = null;
