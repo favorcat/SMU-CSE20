@@ -37,10 +37,10 @@ public class SignUpFrame extends JFrame implements Runnable{
         password.setPreferredSize(new Dimension(70, 30));
         typePassword.setPreferredSize(new Dimension(300, 30));
 
-        name.setPreferredSize(new Dimension(300, 30));
+        name.setPreferredSize(new Dimension(70, 30));
         typeName.setPreferredSize(new Dimension(300, 30));
 
-        num.setPreferredSize(new Dimension(300, 30));
+        num.setPreferredSize(new Dimension(70, 30));
         typeNum.setPreferredSize(new Dimension(300, 30));
 
         enter.setPreferredSize(new Dimension(185, 30));
@@ -66,7 +66,7 @@ public class SignUpFrame extends JFrame implements Runnable{
         cancel.addActionListener(ml); // Cancel 버튼에 이벤트 리스너 추가
 
         setResizable(false);
-        setSize(400, 500);
+        setSize(400, 220);
 
         //회원가입 창을 화면 중앙에 배치시키기...
         Dimension frameSize = this.getSize();   //프레임 사이즈를 가져오기
