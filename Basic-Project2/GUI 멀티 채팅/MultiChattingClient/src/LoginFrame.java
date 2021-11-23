@@ -3,7 +3,7 @@ import java.awt.*;
 import java.awt.event.*;
 
 // 쓰레드 인터페이스 사용
-public class LoginFrame extends JFrame implements Runnable{
+public class LoginFrame extends JFrame {
     JPanel panel = new JPanel(new FlowLayout()); // 레이아웃 선언
     JButton enter = new JButton("Login"); // 로그인 버튼  선언
     JButton signup = new JButton("SignUp"); // 취소 버튼 선언
@@ -56,11 +56,6 @@ public class LoginFrame extends JFrame implements Runnable{
         setVisible(true);
     }
 
-    @Override
-    public void run() {
-
-    }
-
     class MyActionListener implements ActionListener  {
         //이벤트를 발생시킨 컴포넌트(소스)
         public void actionPerformed(ActionEvent e) {
@@ -75,15 +70,19 @@ public class LoginFrame extends JFrame implements Runnable{
                 if(connector.sendLoginInformation(typeId.getText(), pw.toString())) {
                     mainOperator.mf.flag = true; // 채팅 상태로 변경
                     mainOperator.mf.setVisible(true);
+                    typeId.setText("");
+                    typePassword.setText("");
                     dispose();
                     // 메인프레임에서 메세지리스너 시작
                     mainOperator.mf.ml.start();
                 }else {
-                    System.out.println("Log in Error~~~");
+                    JOptionPane.showMessageDialog(null, "로그인 실패!");
                 }
 
             }else if (b.getText().equals("SignUp")) {
                 mainOperator.sf.setVisible(true);
+                typeId.setText("");
+                typePassword.setText("");
                 dispose();
             }
         }

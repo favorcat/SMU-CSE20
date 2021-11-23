@@ -58,6 +58,8 @@ public class MyConnector {
         String msg = "";
         try {
             dataOutStream.writeUTF(signupTag + "//" + uid + "//" + upass + "//" + uname + "//" + unum);
+            // 서버로부터 받아온 회원가입 정보 추가 성공/실패의 boolean 값 받아움
+            msg = dataInStream.readUTF();
         } catch(Exception e) {
             e.printStackTrace();
         }

@@ -12,15 +12,15 @@ public class MainFrame extends JFrame{
     JPanel centerPanel = new JPanel(new BorderLayout());
     // 접속자 목록 보여줄 판넬
     JPanel eastPanel = new JPanel();
-    JTextArea onlineUser = new JTextArea("",34,10);
+    JTextArea onlineUser = new JTextArea("",24,10);
     JScrollPane onlineSP = new JScrollPane(onlineUser);
 
     // centerPanel
-    JTextArea textArea = new JTextArea("",33,33);
+    JTextArea textArea = new JTextArea("",23,20);
     JScrollPane sp = new JScrollPane(textArea);
 
     JPanel sendPanel = new JPanel(new BorderLayout());
-    JTextField textField = new JTextField(35);
+    JTextField textField = new JTextField(28);
     JButton sendBtn = new JButton("전송");
     // eastPanel 컴포넌트
     //JList onlineMember = new JList();
@@ -55,7 +55,7 @@ public class MainFrame extends JFrame{
 
         sendBtn.addActionListener(al);
         this.add(basePanel, BorderLayout.CENTER);
-        this.setSize(650,590);
+        this.setSize(550,430);
     }
 
     class MyActionListener implements ActionListener {

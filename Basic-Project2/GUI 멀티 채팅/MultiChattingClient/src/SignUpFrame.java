@@ -10,10 +10,10 @@ public class SignUpFrame extends JFrame implements Runnable{
     JButton enter = new JButton("SignUp"); // 회원가입 버튼  선언
     JButton cancel = new JButton("Cancel"); // 취소 버튼 선언
 
-    JTextField typeId = new JTextField(); // id 받은곳 선언
-    JPasswordField typePassword = new JPasswordField(); // password 받은곳 선언 받으면 ** < 처럼 나옴
-    JTextField typeName = new JTextField(); // 이름 받은 곳 선언
-    JTextField typeNum = new JTextField(); // 연락처 받은 곳 선언
+    JTextField typeId = new JTextField(""); // id 받은곳 선언
+    JPasswordField typePassword = new JPasswordField(""); // password 받은곳 선언 받으면 ** < 처럼 나옴
+    JTextField typeName = new JTextField(""); // 이름 받은 곳 선언
+    JTextField typeNum = new JTextField(""); // 연락처 받은 곳 선언
 
     JLabel id = new JLabel("I   D"); // 라벨 type id
     JLabel password = new JLabel("Password"); // 라벨 type password
@@ -94,12 +94,26 @@ public class SignUpFrame extends JFrame implements Runnable{
                 System.out.println(typeId.getText()+ "//" + pw + "//" + typeName.getText() + "//" + typeNum.getText());
                 if(connector.sendSignupInformation(typeId.getText(), pw.toString(), typeName.getText(), typeNum.getText())) {
                     mainOperator.lf.setVisible(true);
+                    typeId.setText("");
+                    typePassword.setText("");
+                    typeName.setText("");
+                    typeNum.setText("");
                     dispose();
+                    JOptionPane.showMessageDialog(null, "회원가입 성공!");
                 }else {
-                    System.out.println("회원가입 in Error~~~");
+                    typeId.setText("");
+                    typePassword.setText("");
+                    typeName.setText("");
+                    typeNum.setText("");
+                    JOptionPane.showMessageDialog(null, "회원가입 실패!");
                 }
 
             }else if (b.getText().equals("Cancel")) {
+                typeId.setText("");
+                typePassword.setText("");
+                typeName.setText("");
+                typeNum.setText("");
+
                 mainOperator.lf.setVisible(true);
                 dispose();
             }

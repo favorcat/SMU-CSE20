@@ -136,6 +136,7 @@ class ConnectedClient extends Thread{
                     Writer wr = new BufferedWriter(new FileWriter(dataFile, true));
                     wr.append(name).append("//").append(pw).append("//").append(name).append("//").append(num).append("\n");
                     wr.close();
+                    dataOutStream.writeUTF("SIGNUP_OK");
                     //server.lc;
 
                     // 만약 태그가 채팅이라면
