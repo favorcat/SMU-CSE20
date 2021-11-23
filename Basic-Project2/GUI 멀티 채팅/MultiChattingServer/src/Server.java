@@ -2,8 +2,8 @@ import java.io.*;
 import java.io.IOException;
 import java.net.*;
 import java.net.SocketException;
-import java.util.ArrayList;
-import java.util.StringTokenizer;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 public class Server {
     // 서버 소켓 생성
@@ -57,9 +57,8 @@ class ConnectedClient extends Thread{
 
     // 보낸 문자열이 로그인인지, 채팅인지 확인하기 위한 태그
     String loginTag = "LOGIN";
+    String signTag = "SIGNUP";
     String chatTag = "CHAT";
-
-    ArrayList<String> connectedUser = new ArrayList<String>();
 
     // 생성자에 소켓과 서버를 넣어줌
     ConnectedClient(Socket _s, Server _ss){
@@ -67,18 +66,30 @@ class ConnectedClient extends Thread{
         this.server = _ss;
     }
 
+//    void updatingUser(){
+//        ArrayList<String> userList = null;
+//        for(int i=0; i<server.clients.size(); i++){
+//            userList.add(server.clients.get(i).uName);
+//        }
+//        System.out.println(userList);
+//    }
+
     @Override
     public void run() {
+        Date now = new Date(System.currentTimeMillis());
+        SimpleDateFormat simple = new SimpleDateFormat(" (a hh:mm)");
+
         try {
             // 정상적으로 연결이 되면 연결되었다고 출력
             System.out.println("Server> " + this.socket.toString() + "에서의 접속이 연결되었습니다.");
+
             // 데이터를 받고 주기 위해 생성
             outStream = this.socket.getOutputStream();
             dataOutStream = new DataOutputStream(outStream);
             inStream = this.socket.getInputStream();
             dataInStream = new DataInputStream(inStream);
 
-            while(true) {
+            while (true) {
                 // 계속 루프를 돌면서 문자열 받는 것 검사
                 msg = dataInStream.readUTF();
                 // 기본적으로 문자열들은 "//"로 구분되어 있으니 StringTokenizer 사용
@@ -87,59 +98,69 @@ class ConnectedClient extends Thread{
                 String token = stk.nextToken();
 
                 // 만약 태그가 로그인이라면
-                if(token.equals(loginTag)){
+                if (token.equals(loginTag)) {
                     // 문자열에 있는 ID와 PW를 Tokenizer로 가져옴
                     String id = stk.nextToken();
                     String pass = stk.nextToken();
 
                     // 로그인을 위한 아이디와 암호 확인 작업 필요
-                    if(server.lc.check(id, pass)){
+                    if (server.lc.check(id, pass)) {
                         dataOutStream.writeUTF("LOGIN_OK");
                         // 유저의 이름을 가져옴
                         uName = server.lc.getName(id);
-                        dataOutStream.writeUTF("[" + uName + "] 님이 입장하셨습니다.");
-                        for(int i=0; i<server.clients.size(); i++){
-                            if( !(this.uName.equals(server.clients.get(i).uName)) ) {
+                        //connectedUser.addElement(uName);
+                        dataOutStream.writeUTF("[" + uName + "] 님이 입장하셨습니다." + simple.format(now));
+                        for (int i = 0; i < server.clients.size(); i++) {
+                            if (!(this.uName.equals(server.clients.get(i).uName))) {
                                 // 다른 유저의 데이터 스트림을 받아옴
                                 outStream = server.clients.get(i).socket.getOutputStream();
                                 // 가져온 데이터로 dataOutStream 생성
                                 dataOutStream = new DataOutputStream(outStream);
                                 // writeUTF로 채팅 메세지 설정
-                                dataOutStream.writeUTF("[" + this.uName + "] 님이 입장하셨습니다.");
-                                connectedUser.add(uName);
-                                System.out.println(connectedUser);
+                                dataOutStream.writeUTF("[" + this.uName + "] 님이 입장하셨습니다." + simple.format(now));
+//                                connectedUser.add(uName);
+//                                System.out.println(connectedUser);
                             }
                         }
                     } else {
                         dataOutStream.writeUTF("LOGIN_FAIL");
                     }
+                } else if (token.equals((signTag))){
+                    String id = stk.nextToken();
+                    String pw = stk.nextToken();
+                    String name = stk.nextToken();
+                    String num = stk.nextToken();
+
+                    // 유저 정보가 저장되어 있는 DB 파일 경로 지정해서 가져옴
+                    File dataFile = new File("/Users/favorcat/Github/SMU-CSE20/Basic-Project2/GUI 멀티 채팅/MultiChattingServer/users.txt");
+                    Writer wr = new BufferedWriter(new FileWriter(dataFile, true));
+                    wr.append(name).append("//").append(pw).append("//").append(name).append("//").append(num).append("\n");
+                    wr.close();
+                    //server.lc;
 
                     // 만약 태그가 채팅이라면
-                } else if (token.equals(chatTag)){
+                } else if (token.equals(chatTag)) {
                     // 태그 뒤에 바로 메세지가 옴
                     msg = stk.nextToken();
-
                     // 연결된 클라이언트들의 배열 중에서 다른 클라이언트가 보낸 것 검사
-                    for(int i=0; i<server.clients.size(); i++){
-                        if( !(this.uName.equals(server.clients.get(i).uName)) ) {
+                    for (int i = 0; i < server.clients.size(); i++) {
+                        if (!(this.uName.equals(server.clients.get(i).uName))) {
                             // 해당 클라이언트의 소켓에서 데이터를 가져옴
                             outStream = server.clients.get(i).socket.getOutputStream();
                             // 가져온 데이터로 dataOutStream 생성
                             dataOutStream = new DataOutputStream(outStream);
                             // writeUTF로 채팅 메세지 설정
-                            dataOutStream.writeUTF("["+ this.uName + "] : " + msg);
-                            System.out.println("["+ this.uName + "] : " + msg);
-                       }
+                            dataOutStream.writeUTF("[" + this.uName + "] : " + msg + simple.format(now));
+                            System.out.println("[" + this.uName + "] : " + msg + simple.format(now));
+                        }
                     }
                 }
             }
-
-        } catch(IOException e) {
+        } catch (IOException e) {
             System.out.println("Server> 종료");
             e.printStackTrace();
             try {
-                dataOutStream.writeUTF("["+ this.uName + "] 님이 퇴장하셨습니다.");
-                connectedUser.remove(indexOf(this.uName));
+                dataOutStream.writeUTF("[" + this.uName + "] 님이 퇴장하셨습니다." + simple.format(now));
             } catch (IOException ex) {
                 ex.printStackTrace();
             }

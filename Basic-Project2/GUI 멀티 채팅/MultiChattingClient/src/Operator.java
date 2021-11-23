@@ -9,7 +9,7 @@ public class Operator {
         Operator operator = new Operator();
         operator.connector = new MyConnector();
         operator.lf = new LoginFrame(operator);
-        operator.sf = new SignUpFrame();
+        operator.sf = new SignUpFrame(operator);
         operator.mf = new MainFrame(operator);
 
     }

@@ -1,5 +1,8 @@
 import java.io.*;
 import java.net.*;
+import java.util.ArrayList;
+import java.util.StringTokenizer;
+import java.util.Vector;
 
 public class MyConnector {
     // 소켓 생성
@@ -10,10 +13,9 @@ public class MyConnector {
     InputStream inStream = null;
     DataInputStream dataInStream = null;
 
-    //MessageListener ml = null;
-
     // 보내는 문자열이 로그인인지 채팅인지 태그를 달기 위해 선언
     final String loginTag = "LOGIN";
+    final String signupTag = "SIGNUP";
     final String chatTag = "CHAT";
 
     MyConnector(){
@@ -37,6 +39,8 @@ public class MyConnector {
     boolean sendLoginInformation(String uid, String upass){
         // 보낼 문자열 초기화
         String msg = "";
+        String name = "";
+
         try {
             // 입력받은 ID와 PW 앞에 로그인 태그를 붙여서 데이터 전송
             dataOutStream.writeUTF(loginTag + "//" + uid + "//" + upass);
@@ -48,6 +52,16 @@ public class MyConnector {
         }
         // 로그인 성공했으면 true값 반환
         return msg.equals("LOGIN_OK");
+    }
+
+    boolean sendSignupInformation(String uid, String upass, String uname, String unum){
+        String msg = "";
+        try {
+            dataOutStream.writeUTF(signupTag + "//" + uid + "//" + upass + "//" + uname + "//" + unum);
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+        return msg.equals("SIGNUP_OK");
     }
 
     // 채팅창의 전송 버튼 누를 떄 실행할 메소드, 매개변수는 입력받은 텍스트
@@ -79,14 +93,12 @@ class MessageListener extends Thread {
     public void run() {
         try {
             System.out.println("MainFrame flag >> " + mf.flag);
-            //if (mf.flag){
-                while(true) {
-                    // 스레드가 계속 돌면서 데이터를 받아옴
-                    String msg = dataInStream.readUTF();
-                    System.out.println(msg);
-                    mf.textArea.append(msg+"\n");
-                }
-            //}
+            while(true) {
+                // 스레드가 계속 돌면서 데이터를 받아옴
+                String msg = dataInStream.readUTF();
+                System.out.println(msg);
+                mf.textArea.append(msg+"\n");
+            }
         } catch(Exception e) {
             e.printStackTrace();
         }

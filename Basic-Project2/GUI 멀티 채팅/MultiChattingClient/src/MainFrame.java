@@ -2,6 +2,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class MainFrame extends JFrame{
     // 베이스 판넬
@@ -58,13 +60,16 @@ public class MainFrame extends JFrame{
 
     class MyActionListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
+            Date now = new Date(System.currentTimeMillis());
+            SimpleDateFormat simple = new SimpleDateFormat(" (a hh:mm)");
+
             // 전송 버튼을 눌렀을 때, 채팅메세지를 서버로 전송
             JButton b =  (JButton)e.getSource();
             if (b.getText().equals("전송")) {
                 if (textField.getText().equals("")) return;
                 else {
                    connector.sendChat(textField.getText());
-                   textArea.append("[나]: "+ textField.getText()+"\n");
+                   textArea.append("[나]: "+ textField.getText()+ simple.format(now) + "\n");
                 }
                 textField.setText("");
             } else {
