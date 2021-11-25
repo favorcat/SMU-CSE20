@@ -1,5 +1,6 @@
 import java.io.*;
 import java.net.*;
+import java.util.Vector;
 
 public class MyConnector {
     // 소켓 생성
@@ -82,6 +83,10 @@ class MessageListener extends Thread {
     // 메인플레임을 들고 있어야 메인프레임의 textarea에 채팅메세지를 append할 수 있음
     MainFrame mf;
 
+    String nameTag = "NAME//";
+    String userTag = "USER//";
+    String [] userArray = null;
+
     // 생성자로 DataInputStream과 메인프레임 생성
     MessageListener(DataInputStream data, MainFrame _mf){
         dataInStream = data;
@@ -95,8 +100,24 @@ class MessageListener extends Thread {
             while(true) {
                 // 스레드가 계속 돌면서 데이터를 받아옴
                 String msg = dataInStream.readUTF();
+                // 유저 정보가 담긴 리스트가 온 지 검사를 하기 위해 문자열 앞을 잘라서 검사
+                String token = msg.substring(0,6);
+
+                if (token.equals(userTag)) {
+                    String user = msg.substring(7, msg.length()-1);
+                    userArray = user.split(", ");
+                    mf.vec = new Vector<String>();
+                    mf.vec.addElement("<<접속자 목록>>");
+                    for(int i=0; i< userArray.length; i++){
+                        mf.vec.addElement(userArray[i]);
+                    }
+                    mf.onlineUser.setListData(mf.vec);
+                } else if (token.equals(nameTag)) {
+                    mf.myName = msg.substring(6, msg.length());
+                } else {
+                    mf.textArea.append(msg+"\n");
+                }
                 System.out.println(msg);
-                mf.textArea.append(msg+"\n");
             }
         } catch(Exception e) {
             e.printStackTrace();

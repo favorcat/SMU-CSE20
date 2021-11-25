@@ -4,15 +4,18 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Vector;
 
 public class MainFrame extends JFrame{
+    Vector<String> vec = new Vector<String>();
+
     // 베이스 판넬
     JPanel basePanel = new JPanel(new BorderLayout());
     // 채팅, 텍스트 입력 판넬
     JPanel centerPanel = new JPanel(new BorderLayout());
     // 접속자 목록 보여줄 판넬
     JPanel eastPanel = new JPanel();
-    JTextArea onlineUser = new JTextArea("",24,10);
+    JList<String> onlineUser = new JList<>();
     JScrollPane onlineSP = new JScrollPane(onlineUser);
 
     // centerPanel
@@ -22,14 +25,14 @@ public class MainFrame extends JFrame{
     JPanel sendPanel = new JPanel(new BorderLayout());
     JTextField textField = new JTextField(28);
     JButton sendBtn = new JButton("전송");
-    // eastPanel 컴포넌트
-    //JList onlineMember = new JList();
 
     MyConnector connector;
     Operator mainOperator;
     MessageListener ml;
 
     boolean flag = false;
+
+    String myName = "나";
 
     public MainFrame(Operator _o) {
         mainOperator = _o;
@@ -50,8 +53,8 @@ public class MainFrame extends JFrame{
         sendPanel.add(sendBtn, BorderLayout.EAST);
         centerPanel.add(sendPanel, BorderLayout.SOUTH);
 
+        onlineSP.setPreferredSize(new Dimension(100,380));
         eastPanel.add(onlineSP);
-        onlineUser.setEditable(false);
 
         // 전송 버튼에 액션리스너 추가
         sendBtn.addActionListener(al);
@@ -72,8 +75,8 @@ public class MainFrame extends JFrame{
                 else {
                     // 커넥터를 통해 서버로 전송
                    connector.sendChat(textField.getText());
-                   // 내가 작성한 메세지는 "[나]"로 보여짐
-                   textArea.append("[나]: "+ textField.getText()+ simple.format(now) + "\n");
+                   // 내가 작성한 메세지
+                   textArea.append("[" + myName + "]: "+ textField.getText()+ simple.format(now) + "\n");
                 }
                 // 메세지 입력창을 공백으로 초기화
                 textField.setText("");

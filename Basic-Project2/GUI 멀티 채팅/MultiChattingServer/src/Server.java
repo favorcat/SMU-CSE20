@@ -10,6 +10,7 @@ public class Server {
     ServerSocket ss = null;
     // 연결된 클라이언트 관리를 위한 배열
     ArrayList<ConnectedClient> clients = new ArrayList<ConnectedClient>();
+    ArrayList<String> connectedUser = new ArrayList<String>();
     // 로그인 검사할 변수 설정
     LoginChecker lc;
 
@@ -66,14 +67,6 @@ class ConnectedClient extends Thread{
         this.server = _ss;
     }
 
-//    void updatingUser(){
-//        ArrayList<String> userList = null;
-//        for(int i=0; i<server.clients.size(); i++){
-//            userList.add(server.clients.get(i).uName);
-//        }
-//        System.out.println(userList);
-//    }
-
     @Override
     public void run() {
         LoginChecker lc = new LoginChecker();
@@ -109,8 +102,16 @@ class ConnectedClient extends Thread{
                         dataOutStream.writeUTF("LOGIN_OK");
                         // 유저의 이름을 가져옴
                         uName = server.lc.getName(id);
-                        //connectedUser.addElement(uName);
+                        // 유저를 연결된 유저 리스트에 추가
+                        server.connectedUser.add(uName);
+                        // 업데이트 된 유저 리스트 데이터 전송
+                        dataOutStream.writeUTF("USER//" + server.connectedUser);
+                        // 채팅창에서 쓰여질 내 이름 전송
+                        dataOutStream.writeUTF("NAME//" + uName);
+                        // 입장 메세지 출력
                         dataOutStream.writeUTF("[" + uName + "] 님이 입장하셨습니다." + simple.format(now));
+
+                        // 다른 클라이언트에서 들어오는 것 출력
                         for (int i = 0; i < server.clients.size(); i++) {
                             if (!(this.uName.equals(server.clients.get(i).uName))) {
                                 // 다른 유저의 데이터 스트림을 받아옴
@@ -119,8 +120,7 @@ class ConnectedClient extends Thread{
                                 dataOutStream = new DataOutputStream(outStream);
                                 // writeUTF로 채팅 메세지 설정
                                 dataOutStream.writeUTF("[" + this.uName + "] 님이 입장하셨습니다." + simple.format(now));
-//                                connectedUser.add(uName);
-//                                System.out.println(connectedUser);
+                                dataOutStream.writeUTF("USER//" + this.server.connectedUser);
                             }
                         }
                     } else {
@@ -162,13 +162,19 @@ class ConnectedClient extends Thread{
                 }
             }
         } catch (IOException e) {
-            System.out.println("Server> 종료");
+            System.out.println("Server> 클라이언트 연결 종료");
             e.printStackTrace();
             try {
                 // 끊겼으니 퇴장하였다는 메세지 출력
                 dataOutStream.writeUTF("[" + this.uName + "] 님이 퇴장하셨습니다." + simple.format(now));
+                // 연결된 유저 리스트 목록에서 삭제
+                server.connectedUser.remove(this.uName);
+                // 업데이트 된 연결된 유저 목록 데이터 전송
+                dataOutStream.writeUTF("USER//" + server.connectedUser);
             } catch (IOException ex) {
                 ex.printStackTrace();
+                // 연결된 유저 리스트 목록에서 삭제
+                server.connectedUser.remove(this.uName);
             }
         }
     }
