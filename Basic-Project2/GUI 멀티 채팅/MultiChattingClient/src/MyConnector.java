@@ -1,8 +1,5 @@
 import java.io.*;
 import java.net.*;
-import java.util.ArrayList;
-import java.util.StringTokenizer;
-import java.util.Vector;
 
 public class MyConnector {
     // 소켓 생성

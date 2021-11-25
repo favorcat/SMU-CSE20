@@ -26,7 +26,7 @@ public class MainFrame extends JFrame{
     //JList onlineMember = new JList();
 
     MyConnector connector;
-    Operator mainOperator = null;
+    Operator mainOperator;
     MessageListener ml;
 
     boolean flag = false;
@@ -53,6 +53,7 @@ public class MainFrame extends JFrame{
         eastPanel.add(onlineSP);
         onlineUser.setEditable(false);
 
+        // 전송 버튼에 액션리스너 추가
         sendBtn.addActionListener(al);
         this.add(basePanel, BorderLayout.CENTER);
         this.setSize(550,430);
@@ -60,6 +61,7 @@ public class MainFrame extends JFrame{
 
     class MyActionListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
+            // 메세지 뒤에 시간을 보여주기 위해 포맷 설정
             Date now = new Date(System.currentTimeMillis());
             SimpleDateFormat simple = new SimpleDateFormat(" (a hh:mm)");
 
@@ -68,9 +70,12 @@ public class MainFrame extends JFrame{
             if (b.getText().equals("전송")) {
                 if (textField.getText().equals("")) return;
                 else {
+                    // 커넥터를 통해 서버로 전송
                    connector.sendChat(textField.getText());
+                   // 내가 작성한 메세지는 "[나]"로 보여짐
                    textArea.append("[나]: "+ textField.getText()+ simple.format(now) + "\n");
                 }
+                // 메세지 입력창을 공백으로 초기화
                 textField.setText("");
             } else {
                 dispose();

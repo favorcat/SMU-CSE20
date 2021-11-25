@@ -48,7 +48,7 @@ public class LoginFrame extends JFrame {
         setResizable(false);
         setSize(400, 150);
 
-        //로그인 창을 화면 중앙에 배치시키기...
+        //로그인 창을 화면 중앙에 배치
         Dimension frameSize = this.getSize();   //프레임 사이즈를 가져오기
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         this.setLocation((screenSize.width - frameSize.width) / 2, (screenSize.height - frameSize.height) / 2);
@@ -60,26 +60,32 @@ public class LoginFrame extends JFrame {
         //이벤트를 발생시킨 컴포넌트(소스)
         public void actionPerformed(ActionEvent e) {
             JButton b =  (JButton)e.getSource();
-            if (b.getText().equals("Login")) {  // 로그인버튼을 누르면...
-                //Password 컴포넌트에서 문자열 읽어오기 1
+
+            // 로그인 버튼 눌렀을 경우
+            if (b.getText().equals("Login")) {
+                //Password 컴포넌트에서 문자열 읽어오기
                 StringBuilder pw = new StringBuilder();
                 for(int i=0; i<typePassword.getPassword().length; i++) {
                     pw.append(typePassword.getPassword()[i]);
                 }
                 System.out.println(typeId.getText()+ "//" + pw);
+                // 로그인에 성공했다면
                 if(connector.sendLoginInformation(typeId.getText(), pw.toString())) {
                     mainOperator.mf.flag = true; // 채팅 상태로 변경
-                    mainOperator.mf.setVisible(true);
+                    mainOperator.mf.setVisible(true); // 채팅창 활성화
                     typeId.setText("");
                     typePassword.setText("");
                     dispose();
                     // 메인프레임에서 메세지리스너 시작
                     mainOperator.mf.ml.start();
                 }else {
+                    // 로그인 실패의 경우 경고창 생성
                     JOptionPane.showMessageDialog(null, "로그인 실패!");
                 }
 
+            // 회원가입 버튼을 눌렀을 경우
             }else if (b.getText().equals("SignUp")) {
+                // 회원가입창을 활성화 하고 현재 입력되어있는 ID,PW는 빈칸으로 처리, 로그인창 닫기
                 mainOperator.sf.setVisible(true);
                 typeId.setText("");
                 typePassword.setText("");

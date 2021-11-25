@@ -76,6 +76,7 @@ class ConnectedClient extends Thread{
 
     @Override
     public void run() {
+        LoginChecker lc = new LoginChecker();
         Date now = new Date(System.currentTimeMillis());
         SimpleDateFormat simple = new SimpleDateFormat(" (a hh:mm)");
 
@@ -125,6 +126,7 @@ class ConnectedClient extends Thread{
                     } else {
                         dataOutStream.writeUTF("LOGIN_FAIL");
                     }
+                    // 회원가입을 위한 정보를 받았다면
                 } else if (token.equals((signTag))){
                     String id = stk.nextToken();
                     String pw = stk.nextToken();
@@ -133,11 +135,13 @@ class ConnectedClient extends Thread{
 
                     // 유저 정보가 저장되어 있는 DB 파일 경로 지정해서 가져옴
                     File dataFile = new File("/Users/favorcat/Github/SMU-CSE20/Basic-Project2/GUI 멀티 채팅/MultiChattingServer/users.txt");
+                    // 덮어쓰기가 아니라 아래에 추가할 수 있도록 append를 true로 해줌
                     Writer wr = new BufferedWriter(new FileWriter(dataFile, true));
                     wr.append(name).append("//").append(pw).append("//").append(name).append("//").append(num).append("\n");
                     wr.close();
+                    // DB가 업데이트 되었으므로 서버가 들고있는 유저정보를 업데이트
+                    lc.DBchecker();
                     dataOutStream.writeUTF("SIGNUP_OK");
-                    //server.lc;
 
                     // 만약 태그가 채팅이라면
                 } else if (token.equals(chatTag)) {
@@ -161,6 +165,7 @@ class ConnectedClient extends Thread{
             System.out.println("Server> 종료");
             e.printStackTrace();
             try {
+                // 끊겼으니 퇴장하였다는 메세지 출력
                 dataOutStream.writeUTF("[" + this.uName + "] 님이 퇴장하셨습니다." + simple.format(now));
             } catch (IOException ex) {
                 ex.printStackTrace();

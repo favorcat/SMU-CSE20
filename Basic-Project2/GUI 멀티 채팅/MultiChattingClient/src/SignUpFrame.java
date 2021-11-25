@@ -1,4 +1,3 @@
-import javax.naming.Name;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -22,7 +21,7 @@ public class SignUpFrame extends JFrame implements Runnable{
 
     // 커넥터와 오퍼레이터를 들고 있어야 로그인 기능을 구현할 수 있음
     MyConnector connector;
-    Operator mainOperator = null;
+    Operator mainOperator;
 
     public SignUpFrame(Operator _o) {
         mainOperator = _o;
@@ -46,20 +45,20 @@ public class SignUpFrame extends JFrame implements Runnable{
         enter.setPreferredSize(new Dimension(185, 30));
         cancel.setPreferredSize(new Dimension(185, 30));
 
-        panel.add(id); //  ID 추가
-        panel.add(typeId); // 입력된 ID 추가
+        panel.add(id);              //  ID 추가
+        panel.add(typeId);          // 입력된 ID 추가
 
-        panel.add(password); // PASSWORD 추가
-        panel.add(typePassword); // 입력된 PASSWORD 추가
+        panel.add(password);        // PASSWORD 추가
+        panel.add(typePassword);    // 입력된 PASSWORD 추가
 
-        panel.add(name);
-        panel.add(typeName);
+        panel.add(name);            // 이름(닉네임) 추가
+        panel.add(typeName);        // 입력된 이름 추가
 
-        panel.add(num);
-        panel.add(typeNum);
-
-        panel.add(enter);
-        panel.add(cancel);
+        panel.add(num);             // 연락처 추가 
+        panel.add(typeNum);         // 입력된 연락처 추가
+    
+        panel.add(enter);           // 회원가입 버튼 추가
+        panel.add(cancel);          // 취소 버튼 추가
 
         setContentPane(panel);
         enter.addActionListener(ml); // Login 버튼에 이벤트 리스너 추가
@@ -68,7 +67,7 @@ public class SignUpFrame extends JFrame implements Runnable{
         setResizable(false);
         setSize(400, 220);
 
-        //회원가입 창을 화면 중앙에 배치시키기...
+        //회원가입 창을 화면 중앙에 배치
         Dimension frameSize = this.getSize();   //프레임 사이즈를 가져오기
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         this.setLocation((screenSize.width - frameSize.width) / 2, (screenSize.height - frameSize.height) / 2);
@@ -85,13 +84,15 @@ public class SignUpFrame extends JFrame implements Runnable{
         //이벤트를 발생시킨 컴포넌트(소스)
         public void actionPerformed(ActionEvent e) {
             JButton b =  (JButton)e.getSource();
-            if (b.getText().equals("SignUp")) {  // 로그인버튼을 누르면...
-                //Password 컴포넌트에서 문자열 읽어오기 1
+            // 로그인 버튼 눌렀을 경우
+            if (b.getText().equals("SignUp")) {
+                //Password 컴포넌트에서 문자열 읽어오기
                 StringBuilder pw = new StringBuilder();
                 for(int i=0; i<typePassword.getPassword().length; i++) {
                     pw.append(typePassword.getPassword()[i]);
                 }
                 System.out.println(typeId.getText()+ "//" + pw + "//" + typeName.getText() + "//" + typeNum.getText());
+                // 회원가입 성공하면 채워넣은 정보들 빈칸으로 만든 후, 로그인창 활성화 및 회원가입창 닫기
                 if(connector.sendSignupInformation(typeId.getText(), pw.toString(), typeName.getText(), typeNum.getText())) {
                     mainOperator.lf.setVisible(true);
                     typeId.setText("");
@@ -99,8 +100,10 @@ public class SignUpFrame extends JFrame implements Runnable{
                     typeName.setText("");
                     typeNum.setText("");
                     dispose();
+                    // 회원가입 성공했다는 경고창 띄우기
                     JOptionPane.showMessageDialog(null, "회원가입 성공!");
                 }else {
+                    // 회원가입 실패했을 경우 채워넣은 정보들 빈칸으로 만든 후 경고창 띄우기
                     typeId.setText("");
                     typePassword.setText("");
                     typeName.setText("");
@@ -108,12 +111,15 @@ public class SignUpFrame extends JFrame implements Runnable{
                     JOptionPane.showMessageDialog(null, "회원가입 실패!");
                 }
 
+                // 취소 버튼 눌렀을 경우
             }else if (b.getText().equals("Cancel")) {
+                // 채워넣은 정보들 빈칸으로 만듦
                 typeId.setText("");
                 typePassword.setText("");
                 typeName.setText("");
                 typeNum.setText("");
 
+                // 로그인창 활성화 및 회원가입창 닫기
                 mainOperator.lf.setVisible(true);
                 dispose();
             }
