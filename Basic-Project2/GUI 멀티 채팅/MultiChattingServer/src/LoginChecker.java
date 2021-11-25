@@ -14,6 +14,11 @@ public class LoginChecker {
     StringTokenizer st;
 
     LoginChecker(){
+        DBchecker();
+    }
+
+    // 회원가입으로 정보 추가할때, 유저 정보 업데이트를 위해 메소드로 구현
+    public void DBchecker(){
         try {
             // 파일을 읽기 위해 BufferReader 선언
             BufferedReader br = new BufferedReader(new FileReader(dataFile));
@@ -36,7 +41,6 @@ public class LoginChecker {
             System.out.println(error.getMessage());
         }
     }
-
     // 입력받은 ID와 PW가 DB와 일치하는지
     boolean check(String _id, String _pass) {
         // 로그인 성공 flag 설정
