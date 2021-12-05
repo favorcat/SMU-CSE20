@@ -1,0 +1,45 @@
+import  java.sql.*;
+
+public class CreateCustomer {
+
+	public static void main(String[] args) {
+		String URL = "jdbc:mysql://127.0.0.1:3306/bank?serverTimezone=Asia/Seoul";
+		Connection con = null;
+		Statement stmt = null;
+		try {
+			Class.forName("com.mysql.cj.jdbc.Driver");
+		}catch(Exception e) {
+			System.out.println(e.toString());
+		}
+
+		String createString = "CREATE TABLE customer " +
+							"(customer_id char(6) not null primary key, " +
+				            "customer_name varchar(15) not null," +
+							"customer_tel varchar(13), "+
+				            "customer_addr varchar(20))";
+		
+		try {
+			con = DriverManager.getConnection(URL, "jschoi", "jschoi");
+			System.out.println("OK");
+			stmt = con.createStatement();
+			stmt.executeUpdate(createString);
+			System.out.println("OK2");
+			
+		}catch(Exception e) {
+			System.out.println(e.toString());
+			
+		}
+		
+		finally {
+			try {
+				if(stmt != null) stmt.close();
+				if(con != null) con.close();
+				
+			}catch(Exception e){
+				
+			}
+			
+		}
+	}
+
+}
