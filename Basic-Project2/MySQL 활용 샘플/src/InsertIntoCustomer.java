@@ -1,12 +1,11 @@
 import java.io.*;
 import java.sql.*;
-import java.util.ArrayList;
 import java.util.StringTokenizer;
 
 public class InsertIntoCustomer {
     public static void main(String args[]) {
 
-        File dataFile = new File("/Users/favorcat/Github/SMU-CSE20/Basic-Project2/MySQL 활용 샘플/users.txt");
+        File dataFile = new File("/Users/favorcat/Github/SMU-CSE20/Basic-Project2/MySQL 활용 샘플/students.txt");
         String readData = null;
         StringTokenizer st;
 
@@ -24,7 +23,7 @@ public class InsertIntoCustomer {
             return;
         }
 
-        String insertString = "INSERT INTO user VALUES ";
+        String insertString = "INSERT INTO students VALUES ";
         // 삽입할 행의 정보를 배열에 저장한 후 이를 이용해 삽입
 //        String recordString[] =
 //                {insertString + "('C-1001', '가나다', '010-1111-2222', '서울')",
@@ -42,14 +41,12 @@ public class InsertIntoCustomer {
             int count = 0;
             while ((readData = br.readLine()) != null) {
                 // 끝까지 읽는다.
-                st = new StringTokenizer(readData, "//"); // 구분자는
-                String userId= st.nextToken(); // 첫번째 받아주기
-                String userPassword = st.nextToken(); //  구분자 후 두번째
-                stmt.executeUpdate(insertString + "('" + userId + "', '"+ userPassword + "')");
+                st = new StringTokenizer(readData, " "); // 구분자는 "//"
+                stmt.executeUpdate(insertString + "('" + st.nextToken() + "', '" + st.nextToken() + "', '" + st.nextToken() + "', '" + st.nextToken() + "', '" + st.nextToken() + "')");
                 count++;
             }
             br.close();
-            System.out.println(count + "개의 레코드가 customer 테이블에 삽입되었습니다! ");
+            System.out.println(count + "개의 레코드가 테이블에 삽입되었습니다! ");
 
         } catch(SQLException | IOException ex) {
             System.err.println("SQLException: " + ex.getMessage());
