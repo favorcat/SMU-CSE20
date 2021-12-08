@@ -11,21 +11,26 @@ public class DBChecker {
     String DBuser = "root";
     String passwd = "1234";
 
-    // 입력 받은 ID와 PW가 DB와 일치하는지 검사
-    boolean check(String _id, String _pass) {
-        // 로그인 성공 flag 설정
-        boolean flag = false;
-
+    DBChecker(){
         try {
             // mySql 연동을 책임질 클래스를 가지고 옴, 필수 작성 코드
             Class.forName("com.mysql.cj.jdbc.Driver");
         } catch (Exception e) {
             System.out.println(e.toString());
         }
-
         try {
             con = DriverManager.getConnection(url, DBuser, passwd);
             stmt = con.createStatement();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    // 입력 받은 ID와 PW가 DB와 일치하는지 검사
+    boolean check(String _id, String _pass) {
+        // 로그인 성공 flag 설정
+        boolean flag = false;
+        try {
             // user 테이블에서 입력 받은 ID와 PW를 모두 만족하는 것이 있는지 질의
             ResultSet result = stmt.executeQuery("SELECT * FROM user where id like '"+ _id +"' and password like '" + _pass +"'");
             while (result.next()) {
@@ -47,16 +52,6 @@ public class DBChecker {
     boolean signupCheck(String _id, String _pass){
         boolean flag = true;
         try {
-            // mySql 연동을 책임질 클래스를 가지고 옴, 필수 작성 코드
-            Class.forName("com.mysql.cj.jdbc.Driver");
-        } catch(Exception e) {
-            System.out.println(e.toString());
-        }
-
-        try {
-            con= DriverManager.getConnection(url, DBuser, passwd);
-            stmt = con.createStatement();
-
             // 이미 존재하는 아이디인지 중복 검사를 위해 입력 받은 ID와 일치하는 데이터가 있는지 질의
             ResultSet result = stmt.executeQuery("SELECT * FROM user where id like '"+ _id +"'");
             while (result.next()) {
@@ -79,16 +74,6 @@ public class DBChecker {
     String departmentCheck(){
         String res = "";
         try {
-            // mySql 연동을 책임질 클래스를 가지고 옴, 필수 작성 코드
-            Class.forName("com.mysql.cj.jdbc.Driver");
-        } catch(Exception e) {
-            System.out.println(e.toString());
-        }
-
-        try {
-            con= DriverManager.getConnection(url, DBuser, passwd);
-            stmt = con.createStatement();
-
             // department 테이블의 모든 데이터 질의
             ResultSet result = stmt.executeQuery("SELECT * FROM departments");
             while (result.next()) {
@@ -112,15 +97,6 @@ public class DBChecker {
         // 질의 결과를 담을 문자열
         String res = "";
         try {
-            // mySql 연동을 책임질 클래스를 가지고 옴, 필수 작성 코드
-            Class.forName("com.mysql.cj.jdbc.Driver");
-        } catch(Exception e) {
-            System.out.println(e.toString());
-        }
-
-        try {
-            con= DriverManager.getConnection(url, DBuser, passwd);
-            stmt = con.createStatement();
             // students 테이블에서 검색
             String query = "SELECT * FROM students";
 
