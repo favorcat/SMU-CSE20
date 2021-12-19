@@ -89,13 +89,15 @@ public class ChatFrame extends JFrame{
             } else if (b.getText().equals("퇴장")){
                 flag = false;
                 mainOperator.mf.flag = true;
+                mainOperator.mf.selectedRoomNum = "";
+                mainOperator.mf.selectedRoomTitle = "";
 
                 vec = new Vector<String>();
                 onlineUser.setListData(vec);
                 chatPath = "";
                 setTitle("채팅방");
 
-                connector.backToMain(myName);
+                connector.exitRoom(myName);
                 mainOperator.mf.setVisible(true);
                 dispose();
             }

@@ -124,6 +124,7 @@ public class DBChecker {
         return _pw;
     }
 
+    // 해당 경로의 접속자 목록
     String getOnlineUser(int _roomnum){
         String userList = "";
         try {
@@ -137,6 +138,62 @@ public class DBChecker {
         return userList;
     }
 
+    String getRoomList(){
+        String res = "";
+        try {
+            ResultSet result = stmt.executeQuery("SELECT * FROM chatroom order by roomid");
+            while (result.next()){
+                ResultSet usrList = instmt.executeQuery("SELECT * FROM connected where path = " + result.getString("roomid") + " order by cnum desc");
+                int cnt = 0;
+                String leader = "";
+                while (usrList.next()){
+                    cnt++;
+                    leader = usrList.getString("nickname");
+                }
+                if (cnt != 0) {
+                    res += "//" + result.getString("roomid") + ", " +
+                            result.getString("title") + ", " +
+                            leader + ", " + cnt;
+                } else {
+                    delRoom(result.getInt("roomid"));
+                }
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return res;
+    }
+
+    boolean getRoomUsercnt(int _path){
+        boolean flag = true;
+        try {
+            ResultSet result = instmt.executeQuery("SELECT * FROM chatroom where roomid = "+ _path + " order by roomid");
+            int cnt = 0;
+            while(result.next()){
+                cnt = result.getInt("maxnum");
+            }
+            String [] userNum = getOnlineUser(_path).split(", ");
+            if (userNum.length == cnt) flag = false;
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return flag;
+    }
+
+    String getRoomPW(int _path){
+        String pw = "";
+        try {
+            ResultSet result = stmt.executeQuery("SELECT * FROM chatroom where roomid = "+ _path + " order by roomid");
+            while (result.next()){
+                pw = result.getString("pw");
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return pw;
+    }
+
+    // 채팅방 생성
     int makeRoom(String _title, String _pw, String _num, String _nickname){
         try {
             ResultSet res = stmt.executeQuery("SELECT * FROM chatroom order by roomid");
@@ -153,14 +210,23 @@ public class DBChecker {
         }
     }
 
-    void moveUserPath(String _nickname, int path){
+    void moveUserPath(String _nickname, int _path){
         try {
-            stmt.executeUpdate("update connected set path = " + path + " where nickname like '" + _nickname + "'");
+            stmt.executeUpdate("update connected set path = " + _path + " where nickname like '" + _nickname + "'");
+            String check = getRoomList();
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
+    void delRoom(int _path){
+        try {
+            stmt.executeUpdate("delete from chatroom where roomid = " + _path);
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+    }
     void delRoomAll() {
         try {
             stmt.executeUpdate("delete from chatroom");

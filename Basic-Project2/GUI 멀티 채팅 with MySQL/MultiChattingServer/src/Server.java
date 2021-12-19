@@ -63,14 +63,15 @@ class ConnectedClient extends Thread{
     String findPwTag = "FPW";
     String signTag = "SIGNUP";
 
-    String chatTag = "CHAT";
-    String makeChatTag = "MC";
-    String chatPathTag = "PATH";
     int chatPath = 0;
+    String chatPathTag = "PATH";
+    String makeChatTag = "MC";
+    String chatListTag = "LIST";
+    String chatSearchTag = "SEARCH";
     String chatInTag = "CI";
     String chatOutTag = "CO";
+    String chatTag = "CHAT";
 
-    String mainTag = "MAIN";
     String logoutTag = "LOGOUT";
 
     String nameTag = "NAME";
@@ -120,17 +121,7 @@ class ConnectedClient extends Thread{
                         uName = result;
                         dataOutStream.writeUTF(nameTag + "//" + uName);
                         dataOutStream.writeUTF(mainUserTag + "//" + server.dc.getOnlineUser(0));
-
-                        // 다른 클라이언트에서 들어오는 것 출력
-                        for (int i = 0; i < server.clients.size(); i++) {
-                            if (!(uName.equals(server.clients.get(i).uName))) {
-                                // 다른 유저의 데이터 스트림을 받아옴
-                                outStream = server.clients.get(i).socket.getOutputStream();
-                                // 가져온 데이터로 dataOutStream 생성
-                                dataOutStream = new DataOutputStream(outStream);
-                                dataOutStream.writeUTF(mainUserTag + "//" + server.dc.getOnlineUser(0));
-                            }
-                        }
+                        outStreamToMain();
                     } else {
                         dataOutStream.writeUTF("LOGIN_FAIL");
                     }
@@ -184,21 +175,22 @@ class ConnectedClient extends Thread{
                     int result = server.dc.makeRoom(title, pw, num, uName);
                     if (result != -1){
                         chatPath = result;
-                        dataOutStream.writeUTF(String.valueOf(chatPath));
-                        dataOutStream.writeUTF(String.valueOf(chatPath));
-                        dataOutStream.writeUTF(chatPathTag + "//" + chatPath);
-                        dataOutStream.writeUTF(chatUserTag + "//" + chatPath + "//" + server.dc.getOnlineUser(result));
-                        dataOutStream.writeUTF(chatUserTag + "//" + chatPath + "//" + server.dc.getOnlineUser(result));
-
-                        for (int i = 0; i < server.clients.size(); i++) {
-                            if (!(uName.equals(server.clients.get(i).uName))) {
-                                // 다른 유저의 데이터 스트림을 받아옴
+                        for(int i=0; i<server.clients.size(); i++){
+                            if(uName.equals(server.clients.get(i).uName)){
+                                // 해당 클라이언트의 소켓에서 데이터를 가져옴
                                 outStream = server.clients.get(i).socket.getOutputStream();
                                 // 가져온 데이터로 dataOutStream 생성
                                 dataOutStream = new DataOutputStream(outStream);
-                                dataOutStream.writeUTF(mainUserTag + "//" + server.dc.getOnlineUser(0));
+                                dataOutStream.writeUTF(String.valueOf(chatPath));
+                                dataOutStream.writeUTF(String.valueOf(chatPath));
+                                dataOutStream.writeUTF(chatPathTag + "//" + chatPath);
+                                dataOutStream.writeUTF(chatUserTag + "//" + chatPath + "//" + server.dc.getOnlineUser(chatPath));
+                                dataOutStream.writeUTF(chatPathTag + "//" + chatPath);
+                                dataOutStream.writeUTF(chatUserTag + "//" + chatPath + "//" + server.dc.getOnlineUser(chatPath));
+                            dataOutStream.writeUTF(chatTag + "//" + chatPath + "//[" + this.uName + "] 님이 입장하셨습니다." + simple.format(now));
                             }
                         }
+                        outStreamToMain();
                     }
                     else {
                         dataOutStream.writeUTF("MakeRoom_FAIL");
@@ -210,11 +202,10 @@ class ConnectedClient extends Thread{
                     // Path 뒤에 바로 메세지가 옴
                     msg = stk.nextToken();
 
-                    String [] userArray = server.dc.getOnlineUser(chatPath).split(", ");
-
+                    String[] userArray = server.dc.getOnlineUser(chatPath).split(", ");
                     // 연결된 클라이언트들의 배열 중에서 다른 클라이언트가 보낸 것 검사
                     for (int i = 0; i < server.clients.size(); i++) {
-                        for (int j=0; j < userArray.length; j++){
+                        for (int j = 0; j < userArray.length; j++) {
                             if (userArray[j].equals(server.clients.get(i).uName)) {
                                 // 해당 클라이언트의 소켓에서 데이터를 가져옴
                                 outStream = server.clients.get(i).socket.getOutputStream();
@@ -227,10 +218,92 @@ class ConnectedClient extends Thread{
 
                         }
                     }
-                } else if(token.equals(mainTag)) {
-                    server.dc.moveUserPath(uName, 0);
-                    dataOutStream.writeUTF(mainUserTag + "//" + server.dc.getOnlineUser(0));
 
+                } else if(token.equals(chatSearchTag)) {
+                    System.out.println("채팅방 입장 태그");
+                    int path = Integer.parseInt(stk.nextToken());
+                    String outmsg = "";
+                    if (server.dc.getRoomUsercnt(path)) {
+                        String result = server.dc.getRoomPW(path);
+                        if (result.equals("NULL")) {
+                            outmsg = "ROOM_PW_NULL";
+                        } else {
+                            outmsg = "ROOM_INSERT_PW";
+                        }
+                    } else {
+                        outmsg = "ROOM_MAX";
+                    }
+
+                    for(int i=0; i<server.clients.size(); i++){
+                        if(uName.equals(server.clients.get(i).uName)) {
+                            // 해당 클라이언트의 소켓에서 데이터를 가져옴
+                            outStream = server.clients.get(i).socket.getOutputStream();
+                            // 가져온 데이터로 dataOutStream 생성
+                            dataOutStream = new DataOutputStream(outStream);
+                            dataOutStream.writeUTF(outmsg);
+                            dataOutStream.writeUTF(outmsg);
+                            dataOutStream.writeUTF(outmsg);
+                        }
+                    }
+
+                } else if(token.equals(chatInTag)){
+                    int path = Integer.parseInt(stk.nextToken());
+                    String pw = stk.nextToken();
+                    if(pw.equals(server.dc.getRoomPW(path))) {
+                        chatPath = path;
+                        server.dc.moveUserPath(uName, path);
+
+                        for(int i=0; i<server.clients.size(); i++){
+                            if(uName.equals(server.clients.get(i).uName)){
+                                // 해당 클라이언트의 소켓에서 데이터를 가져옴
+                                outStream = server.clients.get(i).socket.getOutputStream();
+                                // 가져온 데이터로 dataOutStream 생성
+                                dataOutStream = new DataOutputStream(outStream);
+                                dataOutStream.writeUTF("ROOM_IN");
+                                dataOutStream.writeUTF(chatPathTag + "//" + chatPath);
+                                dataOutStream.writeUTF(chatUserTag + "//" + chatPath + "//" + server.dc.getOnlineUser(chatPath));
+                            }
+                        }
+
+                        String[] userArray = server.dc.getOnlineUser(chatPath).split(", ");
+                        // 연결된 클라이언트들의 배열 중에서 다른 클라이언트가 보낸 것 검사
+                        for (int i = 0; i < server.clients.size(); i++) {
+                            for (int j = 0; j < userArray.length; j++) {
+                                if (userArray[j].equals(server.clients.get(i).uName)) {
+                                    // 해당 클라이언트의 소켓에서 데이터를 가져옴
+                                    outStream = server.clients.get(i).socket.getOutputStream();
+                                    // 가져온 데이터로 dataOutStream 생성
+                                    dataOutStream = new DataOutputStream(outStream);
+                                    dataOutStream.writeUTF(chatUserTag + "//" + chatPath + "//" + server.dc.getOnlineUser(chatPath));
+                                    dataOutStream.writeUTF(chatTag + "//" + chatPath + "//[" + this.uName + "] 님이 입장하셨습니다." + simple.format(now));
+                                }
+                            }
+                        }
+                        outStreamToMain();
+                    } else dataOutStream.writeUTF("ROOM_FAIL");
+
+                } else if(token.equals(chatOutTag)) {
+                    int currentPath = chatPath;
+                    chatPath = 0;
+                    server.dc.moveUserPath(uName, chatPath);
+                    outStreamToMain();
+
+                    String[] userArray = server.dc.getOnlineUser(currentPath).split(", ");
+                    System.out.println(Arrays.toString(userArray));
+                    // 연결된 클라이언트들의 배열 중에서 다른 클라이언트가 보낸 것 검사
+                    for (int i = 0; i < server.clients.size(); i++) {
+                        for (int j = 0; j < userArray.length; j++) {
+                            if (userArray[j].equals(server.clients.get(i).uName)) {
+                                // 해당 클라이언트의 소켓에서 데이터를 가져옴
+                                outStream = server.clients.get(i).socket.getOutputStream();
+                                // 가져온 데이터로 dataOutStream 생성
+                                dataOutStream = new DataOutputStream(outStream);
+                                dataOutStream.writeUTF(chatUserTag + "//" + currentPath + "//" + server.dc.getOnlineUser(currentPath));
+                                dataOutStream.writeUTF(chatUserTag + "//" + currentPath + "//" + server.dc.getOnlineUser(currentPath));
+                                dataOutStream.writeUTF(chatTag + "//" + currentPath + "//[" + this.uName + "] 님이 퇴장하셨습니다." + simple.format(now));
+                            }
+                        }
+                    }
                 } else if (token.equals(logoutTag)) {
                     socket.close();
                 }
@@ -260,6 +333,26 @@ class ConnectedClient extends Thread{
                 ex.printStackTrace();
             }
             System.out.println("Server> 클라이언트 연결 종료");
+        }
+    }
+
+    private void outStreamToMain() throws IOException {
+        String[] mainUserArray = server.dc.getOnlineUser(0).split(", ");
+        for (int i = 0; i < server.clients.size(); i++) {
+            for (int j = 0; j < mainUserArray.length; j++) {
+                if (mainUserArray[j].equals(server.clients.get(i).uName)) {
+                    // 해당 클라이언트의 소켓에서 데이터를 가져옴
+                    outStream = server.clients.get(i).socket.getOutputStream();
+                    // 가져온 데이터로 dataOutStream 생성
+                    dataOutStream = new DataOutputStream(outStream);
+                    // 가져온 데이터로 dataOutStream 생성
+                    dataOutStream = new DataOutputStream(outStream);
+
+                    dataOutStream.writeUTF(chatListTag + server.dc.getRoomList());
+                    dataOutStream.writeUTF(chatListTag + server.dc.getRoomList());
+                    dataOutStream.writeUTF(mainUserTag + "//" + server.dc.getOnlineUser(0));
+                }
+            }
         }
     }
 }

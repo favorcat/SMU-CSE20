@@ -18,12 +18,12 @@ public class MyConnector {
     String findPwTag = "FPW";
     String signTag = "SIGNUP";
 
-    String chatTag = "CHAT";
     String makeChatTag = "MC";
+    String chatSearchTag = "SEARCH";
     String chatInTag = "CI";
     String chatOutTag = "CO";
+    String chatTag = "CHAT";
 
-    String mainTag = "MAIN";
     String logoutTag = "LOGOUT";
 
     MyConnector(){
@@ -114,6 +114,27 @@ public class MyConnector {
         return msg;
     }
 
+    String searchRoom(String _path){
+        String msg = "";
+        try {
+            dataOutStream.writeUTF(chatSearchTag + "//" + _path);
+            msg = dataInStream.readUTF();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return msg;
+    }
+
+    String enterRoom(String _path, String _pw){
+        String msg = "";
+        try{
+            dataOutStream.writeUTF(chatInTag + "//" + _path + "//" +_pw);
+            msg = dataInStream.readUTF();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return msg;
+    }
     // 채팅창의 전송 버튼 누를 떄 실행할 메소드, 매개변수는 입력받은 텍스트
     void sendChat(String _chat, String _path){
         try {
@@ -125,9 +146,9 @@ public class MyConnector {
         }
     }
 
-    void backToMain(String _nickname) {
+    void exitRoom(String _nickname) {
         try{
-            dataOutStream.writeUTF(mainTag + "//" + _nickname);
+            dataOutStream.writeUTF(chatOutTag + "//" + _nickname);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -144,6 +165,7 @@ class MessageListener extends Thread {
 
     String nameTag = "NAME";
     String mainUserTag = "MAIN_USER";
+    String chatListTag = "LIST";
     String [] userArray = null;
 
     // 생성자로 DataInputStream과 메인프레임 생성
@@ -180,6 +202,27 @@ class MessageListener extends Thread {
                         } else if (token.equals(nameTag)) {
                             mf.myName = stk.nextToken();
                             mf.nameArea.setText("\t" + mf.myName);
+                        } else if (token.equals(chatListTag)) {
+                            // 테이블 초기화
+                            mf.tableModel.setRowCount(0);
+
+                            // 채팅방 별로의 정보는 "//"로 구분되어서 받아옴
+                            while(stk.hasMoreTokens()) { // 정보가 존재할때까지 반복
+                                // 채팅방 개개인의 정보는 data로 담음
+                                String data = stk.nextToken();
+                                System.out.println("채팅방 >> " + data);
+                                // 채팅방 개개인의 정보는 ", "로 구분되어 있음
+                                StringTokenizer sk = new StringTokenizer(data, ", ");
+                                // 테이블에 학생의 정보를 추가하기 위해 배열로 정보를 담음
+                                String[] student = new String[4];
+                                int cnt = 0;
+                                while (sk.hasMoreTokens()) { // 칼럼이 총 5개이므로 5번 반복, 데이터는 not null이므로 토큰이 존재할 때까지 반복문을 돌려도 됨
+                                    student[cnt] = sk.nextToken();
+                                    cnt++;
+                                }
+                                // 채팅방 정보를 테이블에 추가
+                                mf.tableModel.addRow(student);
+                            }
                         }
                     }
                 }
