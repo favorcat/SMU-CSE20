@@ -25,7 +25,7 @@ public class FindIDFrame extends JFrame {
         connector = _o.connector;
         MyActionListener ml = new MyActionListener();
 
-        setTitle("채팅 - 아이디 찾기");
+        setTitle("멀티 채팅프로그램 - 아이디 찾기");
 
         name.setPreferredSize(new Dimension(70, 30));
         typeName.setPreferredSize(new Dimension(300, 30));

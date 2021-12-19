@@ -27,7 +27,7 @@ public class LoginFrame extends JFrame {
         connector = _o.connector;
         MyActionListener ml = new MyActionListener();
 
-        setTitle("채팅 - 로그인");
+        setTitle("멀티 채팅프로그램 - 로그인");
 
         id.setPreferredSize(new Dimension(70, 30));
         typeId.setPreferredSize(new Dimension(300, 30));
