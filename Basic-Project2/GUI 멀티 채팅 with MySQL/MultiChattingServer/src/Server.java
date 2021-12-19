@@ -18,6 +18,7 @@ public class Server {
         Server server = new Server();
         // 서버의 DBChecker 생성
         server.dc = new DBChecker();
+        server.dc.delConnectedAll();
         try {
             // 서버소켓 포트 60000번 설정
             server.ss = new ServerSocket(60000);
@@ -32,8 +33,10 @@ public class Server {
             }
 
         } catch(SocketException e) {
+            server.dc.delConnectedAll();
             System.out.println("Server> 서버종료");
         } catch(IOException e) {
+            server.dc.delConnectedAll();
             System.out.println("Server> 입출력 예외 발생");
         }
     }

@@ -5,6 +5,7 @@ public class DBChecker {
     Connection con = null;
     // DB와 서버가 메세지를 주고 받을 객체
     Statement stmt = null;
+    Statement instmt = null;
     // DB의 스키마 주소
     String url = "jdbc:mysql://127.0.0.1:3306/chatting?serverTimezone=Asia/Seoul";
     // DB ID 및 PW
@@ -21,6 +22,7 @@ public class DBChecker {
         try {
             con = DriverManager.getConnection(url, DBuser, passwd);
             stmt = con.createStatement();
+            instmt = con.createStatement();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -40,11 +42,36 @@ public class DBChecker {
                     break;
                 }
             }
+            if (!_nickname.equals("")) {
+                ResultSet res = stmt.executeQuery("SELECT * FROM connected");
+                res.last();
+                int cnt = res.getRow();
+                if (cnt == 0) cnt = 1;
+                else { cnt = res.getInt("cnum") + 1; }
+                System.out.println("CNT >> " + cnt);
+                instmt.executeUpdate("INSERT INTO connected VALUES ('"+ cnt +"', '"+ _nickname +"', '0')");
+            }
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
         // 닉네임 반환, 공백으로 반환한다면 ID와 PW가 불일치하다는 것
         return _nickname;
+    }
+
+    void delConnectedAll() {
+        try {
+            stmt.executeUpdate("delete from connected");
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+    }
+
+    void delConnected(String _nickname) {
+        try {
+            stmt.executeUpdate("delete from connected where nickname like '" + _nickname + "'");
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
     }
 
     // 회원가입 처리
