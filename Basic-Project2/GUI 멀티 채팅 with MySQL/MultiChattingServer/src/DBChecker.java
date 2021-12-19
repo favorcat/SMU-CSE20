@@ -43,12 +43,11 @@ public class DBChecker {
                 }
             }
             if (!_nickname.equals("")) {
-                ResultSet res = stmt.executeQuery("SELECT * FROM connected");
+                ResultSet res = stmt.executeQuery("SELECT * FROM connected order by cnum");
                 res.last();
                 int cnt = res.getRow();
                 if (cnt == 0) cnt = 1;
                 else { cnt = res.getInt("cnum") + 1; }
-                System.out.println("CNT >> " + cnt);
                 instmt.executeUpdate("INSERT INTO connected VALUES ('"+ cnt +"', '"+ _nickname +"', '0')");
             }
         } catch (SQLException throwables) {
@@ -123,5 +122,50 @@ public class DBChecker {
             throwables.printStackTrace();
         }
         return _pw;
+    }
+
+    String getOnlineUser(int _roomnum){
+        String userList = "";
+        try {
+            ResultSet result = stmt.executeQuery("SELECT * FROM connected where path = "+ _roomnum + " order by cnum");
+            while (result.next()){
+                userList += result.getString("nickname") + ", ";
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return userList;
+    }
+
+    int makeRoom(String _title, String _pw, String _num, String _nickname){
+        try {
+            ResultSet res = stmt.executeQuery("SELECT * FROM chatroom order by roomid");
+            res.last();
+            int cnt = res.getRow();
+            if (cnt == 0) cnt = 1;
+            else { cnt = res.getInt("roomid") + 1; }
+            instmt.executeUpdate("INSERT INTO chatroom VALUES ('" + cnt + "', '"+ _title + "', '"+ _pw + "', '"+ _num + "')");
+            moveUserPath(_nickname, cnt);
+            return cnt;
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+            return -1;
+        }
+    }
+
+    void moveUserPath(String _nickname, int path){
+        try {
+            stmt.executeUpdate("update connected set path = " + path + " where nickname like '" + _nickname + "'");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    void delRoomAll() {
+        try {
+            stmt.executeUpdate("delete from chatroom");
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
     }
 }

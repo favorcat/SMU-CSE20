@@ -18,6 +18,7 @@ public class Server {
         Server server = new Server();
         // 서버의 DBChecker 생성
         server.dc = new DBChecker();
+        server.dc.delRoomAll();
         server.dc.delConnectedAll();
         try {
             // 서버소켓 포트 60000번 설정
@@ -33,10 +34,8 @@ public class Server {
             }
 
         } catch(SocketException e) {
-            server.dc.delConnectedAll();
             System.out.println("Server> 서버종료");
         } catch(IOException e) {
-            server.dc.delConnectedAll();
             System.out.println("Server> 입출력 예외 발생");
         }
     }
@@ -66,8 +65,17 @@ class ConnectedClient extends Thread{
 
     String chatTag = "CHAT";
     String makeChatTag = "MC";
+    String chatPathTag = "PATH";
+    int chatPath = 0;
     String chatInTag = "CI";
     String chatOutTag = "CO";
+
+    String mainTag = "MAIN";
+    String logoutTag = "LOGOUT";
+
+    String nameTag = "NAME";
+    String mainUserTag = "MAIN_USER";
+    String chatUserTag = "CHAT_USER";
 
     // 생성자에 소켓과 서버를 넣어줌
     ConnectedClient(Socket _s, Server _ss){
@@ -110,12 +118,22 @@ class ConnectedClient extends Thread{
                     if (!result.equals("")) {
                         dataOutStream.writeUTF("LOGIN_OK");
                         uName = result;
-                        System.out.println("uName >> " + uName);
-                        dataOutStream.writeUTF("NAME//" + uName);
+                        dataOutStream.writeUTF(nameTag + "//" + uName);
+                        dataOutStream.writeUTF(mainUserTag + "//" + server.dc.getOnlineUser(0));
+
+                        // 다른 클라이언트에서 들어오는 것 출력
+                        for (int i = 0; i < server.clients.size(); i++) {
+                            if (!(uName.equals(server.clients.get(i).uName))) {
+                                // 다른 유저의 데이터 스트림을 받아옴
+                                outStream = server.clients.get(i).socket.getOutputStream();
+                                // 가져온 데이터로 dataOutStream 생성
+                                dataOutStream = new DataOutputStream(outStream);
+                                dataOutStream.writeUTF(mainUserTag + "//" + server.dc.getOnlineUser(0));
+                            }
+                        }
                     } else {
                         dataOutStream.writeUTF("LOGIN_FAIL");
                     }
-
                     // 회원가입을 위한 정보를 받았다면
                 } else if (token.equals((signTag))) {
                     String id = stk.nextToken();
@@ -145,51 +163,103 @@ class ConnectedClient extends Thread{
                     }
 
                     // 만약 태그가 비밀번호찾기라면
-                } else if (token.equals(findPwTag)){
+                } else if (token.equals(findPwTag)) {
                     String id = stk.nextToken();
                     String name = stk.nextToken();
                     String num = stk.nextToken();
 
                     String pw = server.dc.findPW(id, name, num);
-                    if (!id.equals("")){
+                    if (!id.equals("")) {
                         dataOutStream.writeUTF(pw);
                     } else {
                         dataOutStream.writeUTF("NF");
                     }
 
+                    // 만약 태그가 채팅방 생성이라면
+                } else if (token.equals(makeChatTag)) {
+                    String title = stk.nextToken();
+                    String pw = stk.nextToken();
+                    String num = stk.nextToken();
+
+                    int result = server.dc.makeRoom(title, pw, num, uName);
+                    if (result != -1){
+                        chatPath = result;
+                        dataOutStream.writeUTF(String.valueOf(chatPath));
+                        dataOutStream.writeUTF(String.valueOf(chatPath));
+                        dataOutStream.writeUTF(chatPathTag + "//" + chatPath);
+                        dataOutStream.writeUTF(chatUserTag + "//" + chatPath + "//" + server.dc.getOnlineUser(result));
+                        dataOutStream.writeUTF(chatUserTag + "//" + chatPath + "//" + server.dc.getOnlineUser(result));
+
+                        for (int i = 0; i < server.clients.size(); i++) {
+                            if (!(uName.equals(server.clients.get(i).uName))) {
+                                // 다른 유저의 데이터 스트림을 받아옴
+                                outStream = server.clients.get(i).socket.getOutputStream();
+                                // 가져온 데이터로 dataOutStream 생성
+                                dataOutStream = new DataOutputStream(outStream);
+                                dataOutStream.writeUTF(mainUserTag + "//" + server.dc.getOnlineUser(0));
+                            }
+                        }
+                    }
+                    else {
+                        dataOutStream.writeUTF("MakeRoom_FAIL");
+                    }
+
                     // 만약 태그가 채팅이라면
                 } else if (token.equals(chatTag)) {
-                    // 태그 뒤에 바로 메세지가 옴
+                    chatPath = Integer.parseInt(stk.nextToken());
+                    // Path 뒤에 바로 메세지가 옴
                     msg = stk.nextToken();
-//                    // 연결된 클라이언트들의 배열 중에서 다른 클라이언트가 보낸 것 검사
-//                    for (int i = 0; i < server.clients.size(); i++) {
-//                        if (!(this.uName.equals(server.clients.get(i).uName))) {
-//                            // 해당 클라이언트의 소켓에서 데이터를 가져옴
-//                            outStream = server.clients.get(i).socket.getOutputStream();
-//                            // 가져온 데이터로 dataOutStream 생성
-//                            dataOutStream = new DataOutputStream(outStream);
-//                            // writeUTF로 채팅 메세지 설정
-//                            dataOutStream.writeUTF("[" + this.uName + "] : " + msg + simple.format(now));
-//                            System.out.println("[" + this.uName + "] : " + msg + simple.format(now));
-//                        }
-//                    }
+
+                    String [] userArray = server.dc.getOnlineUser(chatPath).split(", ");
+
+                    // 연결된 클라이언트들의 배열 중에서 다른 클라이언트가 보낸 것 검사
+                    for (int i = 0; i < server.clients.size(); i++) {
+                        for (int j=0; j < userArray.length; j++){
+                            if (userArray[j].equals(server.clients.get(i).uName)) {
+                                // 해당 클라이언트의 소켓에서 데이터를 가져옴
+                                outStream = server.clients.get(i).socket.getOutputStream();
+                                // 가져온 데이터로 dataOutStream 생성
+                                dataOutStream = new DataOutputStream(outStream);
+                                // writeUTF로 채팅 메세지 설정
+                                dataOutStream.writeUTF(chatTag + "//" + chatPath + "//[" + this.uName + "] : " + msg + simple.format(now));
+                                System.out.println("[" + this.uName + "] : " + msg + simple.format(now));
+                            }
+
+                        }
+                    }
+                } else if(token.equals(mainTag)) {
+                    server.dc.moveUserPath(uName, 0);
+                    dataOutStream.writeUTF(mainUserTag + "//" + server.dc.getOnlineUser(0));
+
+                } else if (token.equals(logoutTag)) {
+                    socket.close();
                 }
             }
         } catch (IOException e) {
-            System.out.println("Server> 클라이언트 연결 종료");
+            System.out.println("갑자기???");
             e.printStackTrace();
+        } finally {
             try {
-                // 끊겼으니 퇴장하였다는 메세지 출력
-                dataOutStream.writeUTF("[" + this.uName + "] 님이 퇴장하셨습니다." + simple.format(now));
                 // 연결된 유저 리스트 목록에서 삭제
-//                server.connectedUser.remove(this.uName);
-                // 업데이트 된 연결된 유저 목록 데이터 전송
-//                dataOutStream.writeUTF("USER//" + server.connectedUser);
+                dc.delConnected(this.uName);
+                // 유저가 대기실에 있었을 경우, 대기실 접속자에서 삭제
+                for (int i = 0; i < server.clients.size(); i++) {
+                    if (!(uName.equals(server.clients.get(i).uName))) {
+                        // 다른 유저의 데이터 스트림을 받아옴
+                        outStream = server.clients.get(i).socket.getOutputStream();
+                        // 가져온 데이터로 dataOutStream 생성
+                        dataOutStream = new DataOutputStream(outStream);
+                        dataOutStream.writeUTF(mainUserTag + "//" + server.dc.getOnlineUser(0));
+                    }
+                }
+                // 유저가 채팅방에 있었을 경우, 채팅방 접속자에서 삭제
+
             } catch (IOException ex) {
-                ex.printStackTrace();
                 // 연결된 유저 리스트 목록에서 삭제
-//                server.connectedUser.remove(this.uName);
+                dc.delConnected(this.uName);
+                ex.printStackTrace();
             }
+            System.out.println("Server> 클라이언트 연결 종료");
         }
     }
 }

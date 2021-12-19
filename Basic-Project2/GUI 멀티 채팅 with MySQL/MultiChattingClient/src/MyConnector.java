@@ -1,5 +1,6 @@
 import java.io.*;
 import java.net.*;
+import java.util.StringTokenizer;
 import java.util.Vector;
 
 public class MyConnector {
@@ -22,6 +23,9 @@ public class MyConnector {
     String chatInTag = "CI";
     String chatOutTag = "CO";
 
+    String mainTag = "MAIN";
+    String logoutTag = "LOGOUT";
+
     MyConnector(){
         try {
             // 서버와 같은 포트로 socket 생성
@@ -41,7 +45,7 @@ public class MyConnector {
 
     // 로그인을 위한 정보 전송
     boolean sendLoginInformation(String uid, String upass){
-        String msg = null;
+        String msg = "";
         try {
             dataOutStream.writeUTF(loginTag+ "//" + uid + "//"+upass);
             msg = dataInStream.readUTF();
@@ -89,15 +93,44 @@ public class MyConnector {
         return msg;
     }
 
+    void logOut(String _name){
+        try {
+            dataOutStream.writeUTF(logoutTag + "//" + _name);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    String makeRoomInformation(String _title, String _pw, String _num){
+        String msg = "";
+        try{
+            if (_pw.equals("")) _pw = "NULL";
+            if (_num.equals("")) _num = "5";
+            dataOutStream.writeUTF(makeChatTag + "//" + _title + "//" +_pw + "//" +_num);
+            msg = dataInStream.readUTF();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return msg;
+    }
+
     // 채팅창의 전송 버튼 누를 떄 실행할 메소드, 매개변수는 입력받은 텍스트
-    void sendChat(String chat){
-//        try {
-//            // 입력받은 텍스트로 앞에 채팅 태그를 달아서 데이터 전송
-//            dataOutStream.writeUTF(chatTag + "//" + chat);
-//            System.out.println("sendCAHT");
-//        } catch(Exception e) {
-//            e.printStackTrace();
-//        }
+    void sendChat(String _chat, String _path){
+        try {
+            // 입력받은 텍스트로 앞에 채팅 태그를 달아서 데이터 전송
+            dataOutStream.writeUTF(chatTag + "//" + _path + "//" + _chat);
+            System.out.println(chatTag + "//" + _path + "//" + _chat);
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    void backToMain(String _nickname) {
+        try{
+            dataOutStream.writeUTF(mainTag + "//" + _nickname);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
 
@@ -105,50 +138,119 @@ public class MyConnector {
 class MessageListener extends Thread {
     // 데이터를 불러오기 위해 선언
     DataInputStream dataInStream;
-    // 메인플레임을 들고 있어야 메인프레임의 textarea에 채팅메세지를 append할 수 있음
+    // 메인플레임을 들고 있어야 메세지를 append할 수 있음
     MainFrame mf;
     ChatFrame cf;
 
-    String nameTag = "NAME//";
-    String userTag = "USER//";
+    String nameTag = "NAME";
+    String mainUserTag = "MAIN_USER";
     String [] userArray = null;
 
     // 생성자로 DataInputStream과 메인프레임 생성
-    MessageListener(DataInputStream data, MainFrame _mf, ChatFrame _cf){
+    MessageListener(DataInputStream data, MainFrame _mf){
         dataInStream = data;
         mf = _mf;
+    }
+
+    @Override
+    public void run() {
+        try {
+            while(true) {
+                if(mf.flag) {
+                    // 스레드가 계속 돌면서 데이터를 받아옴
+                    String msg = dataInStream.readUTF();
+                    // 기본적으로 문자열들은 "//"로 구분되어 있으니 StringTokenizer 사용
+                    StringTokenizer stk = new StringTokenizer(msg, "//");
+                    System.out.println("=========대기실=========");
+                    System.out.println(msg);
+
+                    // 유저 정보가 담긴 리스트가 온 지 검사를 하기 위해 문자열 앞을 잘라서 검사
+                    String token = stk.nextToken();
+                    if (stk.hasMoreTokens()) {
+                        if (token.equals(mainUserTag)) {
+                            String user = stk.nextToken();
+                            userArray = user.split(", ");
+                            mf.vec = new Vector<String>();
+                            mf.vec.addElement("<<접속자 목록>>");
+                            for (String s : userArray) {
+                                mf.vec.addElement(s);
+                            }
+                            mf.onlineUser.setListData(mf.vec);
+
+                        } else if (token.equals(nameTag)) {
+                            mf.myName = stk.nextToken();
+                            mf.nameArea.setText("\t" + mf.myName);
+                        }
+                    }
+                }
+            }
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+}
+
+class ChatMessageListener extends Thread {
+    // 데이터를 불러오기 위해 선언
+    DataInputStream dataInStream;
+    // 메인플레임을 들고 있어야 메세지를 append할 수 있음
+    ChatFrame cf;
+
+    String nameTag = "NAME";
+    String chatTag = "CHAT";
+    String chatUserTag = "CHAT_USER";
+    String chatPathTag = "PATH";
+    String [] userArray = null;
+
+    // 생성자로 DataInputStream과 메인프레임 생성
+    ChatMessageListener(DataInputStream data, ChatFrame _cf){
+        dataInStream = data;
         cf = _cf;
     }
 
     @Override
     public void run() {
-//        try {
-//            System.out.println("MainFrame flag >> " + cf.flag);
-//            while(true) {
-//                // 스레드가 계속 돌면서 데이터를 받아옴
-//                String msg = dataInStream.readUTF();
-//                // 유저 정보가 담긴 리스트가 온 지 검사를 하기 위해 문자열 앞을 잘라서 검사
-//                String token = msg.substring(0,6);
-//
-//                if (token.equals(userTag)) {
-//                    String user = msg.substring(7, msg.length()-1);
-//                    userArray = user.split(", ");
-//                    cf.vec = new Vector<String>();
-//                    cf.vec.addElement("<<접속자 목록>>");
-//                    for(int i=0; i< userArray.length; i++){
-//                        cf.vec.addElement(userArray[i]);
-//                    }
-//                    cf.onlineUser.setListData(cf.vec);
-//                } else if (token.equals(nameTag)) {
-//                    cf.myName = msg.substring(6, msg.length());
-//                } else {
-//                    cf.textArea.append(msg+"\n");
-//                }
-//                System.out.println(msg);
-//            }
-//        } catch(Exception e) {
-//            e.printStackTrace();
-//        }
+        try {
+            while(true) {
+                if(cf.flag){
+                    // 스레드가 계속 돌면서 데이터를 받아옴
+                    String msg = dataInStream.readUTF();
+                    // 기본적으로 문자열들은 "//"로 구분되어 있으니 StringTokenizer 사용
+                    StringTokenizer stk = new StringTokenizer(msg, "//");
+                    System.out.println("-------채팅방-------");
+                    System.out.println(msg);
+
+                    // 유저 정보가 담긴 리스트가 온 지 검사를 하기 위해 문자열 앞을 잘라서 검사
+                    String token = stk.nextToken();
+                    if (stk.hasMoreTokens()){
+                        if(token.equals(chatUserTag)) {
+                            String path = stk.nextToken();
+                            if(cf.chatPath.equals(path)){
+                                String user = stk.nextToken();
+                                userArray = user.split(", ");
+                                cf.vec = new Vector<String>();
+                                cf.vec.addElement("<<접속자 목록>>");
+                                for (String s : userArray) {
+                                    cf.vec.addElement(s);
+                                }
+                                cf.onlineUser.setListData(cf.vec);
+                            }
+
+                        } else if (token.equals(nameTag)) {
+                            cf.myName = stk.nextToken();
+
+                        } else if (token.equals(chatPathTag)) {
+                            if (cf.chatPath.equals("")) cf.chatPath = stk.nextToken();
+                        } else if (token.equals(chatTag)) {
+                            if(cf.chatPath.equals(stk.nextToken())) cf.textArea.append(stk.nextToken()+"\n");
+                        }
+                    }
+                }
+            }
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
 
     }
 }
