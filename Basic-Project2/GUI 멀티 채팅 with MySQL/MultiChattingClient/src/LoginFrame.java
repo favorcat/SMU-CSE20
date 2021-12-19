@@ -77,12 +77,13 @@ public class LoginFrame extends JFrame {
 
             // 로그인 버튼 눌렀을 경우
             if (b.getText().equals("로그인")) {
-                if (!typeId.getText().equals("")) {
-                    //Password 컴포넌트에서 문자열 읽어오기
-                    StringBuilder pw = new StringBuilder();
-                    for (int i = 0; i < typePassword.getPassword().length; i++) {
-                        pw.append(typePassword.getPassword()[i]);
-                    }
+                //Password 컴포넌트에서 문자열 읽어오기
+                String pw = "";
+                for(int i=0; i<typePassword.getPassword().length; i++)
+                {   pw += typePassword.getPassword()[i];   }
+
+                if (!typeId.getText().equals("") && !pw.equals("")) {
+
                     System.out.println(typeId.getText() + "//" + pw);
                     // 로그인에 성공했다면
                     if (connector.sendLoginInformation(typeId.getText(), pw.toString())) {
