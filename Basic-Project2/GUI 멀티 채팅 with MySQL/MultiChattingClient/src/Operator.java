@@ -28,6 +28,6 @@ public class Operator {
 
         operator.mrf = new MakingRoomFrame(operator);
         operator.cf = new ChatFrame(operator);
-//        operator.rpwf = new RoomPWFrame(operator);
+        operator.rpwf = new RoomPWFrame(operator);
     }
 }
