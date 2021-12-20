@@ -1,15 +1,19 @@
-public class Operator {
-    // Operator로 커넥터, 로그인프레임, 회원가입프레임, 메인프레임 선언
+public class Operator { // Operator로 선언
+    // 커넥터
     MyConnector connector = null;
 
+    // 로그인, 회원가입 프레임
     LoginFrame lf = null;
     SignUpFrame sf = null;
 
+    // 아이디, PW 찾기 프레임
     FindIDFrame fidf = null;
     FindPWFrame fpwf = null;
 
+    // 대기실 프레임
     MainFrame mf = null;
 
+    // 채팅방 생성, 채팅방, 채팅방 비밀번호 입력 프레임
     MakingRoomFrame mrf = null;
     ChatFrame cf = null;
     RoomPWFrame rpwf = null;
