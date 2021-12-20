@@ -123,6 +123,7 @@ public class MakingRoomFrame extends JFrame {
                                 mainOperator.cf.setTitle("[" + mainOperator.cf.chatPath + "] " + typeTitle.getText());
                                 // 입력 칸 초기화
                                 typeTitle.setText("");
+                                typePassword.setText("");
                                 typeNum.setText("");
                                 // 채팅방 생성 프레임 닫기
                                 dispose();

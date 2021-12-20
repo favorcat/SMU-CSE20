@@ -122,7 +122,7 @@ public class MyConnector {
         return msg;
     }
 
-        // 채팅방 입장을 위해 채팅방 정보 요청 (채팅방 번호)
+    // 채팅방 입장을 위해 채팅방 정보 요청 (채팅방 번호)
     String searchRoom(String _path){
         String msg = "";
         try {

@@ -19,7 +19,7 @@ public class MainFrame extends JFrame {
     // 채팅방 목록
     JTable table;
     DefaultTableModel tableModel;
-    String[] columNames = { "번호", "방 제목", "방장", "인원"};
+    String[] columNames = { "채팅방 번호", "채팅방 제목", "방장", "접속인원"};
 
     // 채팅, 텍스트 입력 판넬
     JPanel centerPanel = new JPanel(new BorderLayout());
@@ -34,6 +34,7 @@ public class MainFrame extends JFrame {
     JPanel southPanel = new JPanel(new FlowLayout());
     JTextArea nameArea = new JTextArea("",1,20); // 로그인한 유저 닉네임
     JButton makeBtn = new JButton("채팅방 생성");
+    JButton enterBtn = new JButton("채팅방 입장");
     JButton outBtn = new JButton("로그아웃");
 
     MyConnector connector;
@@ -71,11 +72,13 @@ public class MainFrame extends JFrame {
         southPanel.add(nameArea);
         nameArea.setEditable(false); // 유저 닉네임 변경 불가능
         southPanel.add(makeBtn);
+        southPanel.add(enterBtn);
         southPanel.add(outBtn);
         basePanel.add(southPanel, BorderLayout.SOUTH);
 
         // 버튼에 액션리스너 추가
         makeBtn.addActionListener(al);
+        enterBtn.addActionListener(al);
         outBtn.addActionListener(al);
         table.addMouseListener(msl);
 
@@ -103,7 +106,7 @@ public class MainFrame extends JFrame {
                 if(!selectedRoomNum.equals("") && !selectedRoomTitle.equals("")){
                     // 채팅방 입장을 위해 채팅방 정보 요청을 통해 얻어온 문자열
                     String result = connector.searchRoom(selectedRoomNum);
-
+                    System.out.println(">>> " + result);
                     switch (result) {
                         // 최대 인원일 경우
                         case "ROOM_MAX" -> JOptionPane.showMessageDialog(null, "최대 인원으로 입장 불가", selectedRoomTitle, JOptionPane.ERROR_MESSAGE);
