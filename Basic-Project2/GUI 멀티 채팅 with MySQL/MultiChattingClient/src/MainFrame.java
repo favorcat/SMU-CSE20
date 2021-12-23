@@ -21,11 +21,6 @@ public class MainFrame extends JFrame {
     DefaultTableModel tableModel;
     String[] columNames = { "채팅방 번호", "채팅방 제목", "방장", "접속인원"};
 
-    // 채팅, 텍스트 입력 판넬
-    JPanel centerPanel = new JPanel(new BorderLayout());
-    JTextArea textArea = new JTextArea("",23,20);
-    JScrollPane sp = new JScrollPane(textArea);
-
     // 접속자 목록 보여줄 판넬
     JList<String> onlineUser = new JList<>();
     JScrollPane onlineSP = new JScrollPane(onlineUser);
@@ -148,7 +143,7 @@ public class MainFrame extends JFrame {
                 // 로그아웃을 위한 정보 전송
                 connector.logOut(myName);
                 // 대기실 닫을
-                dispose();
+                System.exit(0);
             }
         }
     }

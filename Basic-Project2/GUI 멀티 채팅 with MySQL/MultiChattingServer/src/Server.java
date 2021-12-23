@@ -163,7 +163,8 @@ class ConnectedClient extends Thread{
                     String num = stk.nextToken();
 
                     String pw = server.dc.findUserPW(id, name, num);
-                    if (!id.equals("")) { // 비밀번호 찾기 성공, 비밀번호 반환
+                    if (!pw.equals("")) { // 비밀번호 찾기 성공, 비밀번호 반환
+                        dataOutStream.writeUTF(pw);
                         dataOutStream.writeUTF(pw);
                     } else {
                         dataOutStream.writeUTF("NF");
@@ -181,6 +182,7 @@ class ConnectedClient extends Thread{
                         // 유저의 채팅 경로를 해당 채팅방으로 변경
                         chatPath = result;
                         // 채팅방 번호(경로) 출력
+                        dataOutStream.writeUTF(chatPathTag + "//" + chatPath);
                         dataOutStream.writeUTF(chatPathTag + "//" + chatPath);
                         dataOutStream.writeUTF(chatPathTag + "//" + chatPath);
                         // 채팅방 접속자 목록 출력
