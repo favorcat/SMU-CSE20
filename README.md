@@ -14,6 +14,10 @@
 ### 2022-PRE학기
 - [게임엔진기초](https://github.com/favorcat/Unity-newbie-code)
 
+### 2022-1학기
+- 오픈소스 SW 프로젝트
+    - [깃허브 실습](https://github.com/favorcat/open-source)
+    - [Teachable Machine 실습](https://github.com/favorcat/AI-test)
 ### 전공동아리
 - [해돋이](https://github.com/favorcat/SMU-CSE20/tree/master/%ED%95%B4%EB%8F%8B%EC%9D%B4%20%EC%A0%84%EA%B3%B5%EB%8F%99%EC%95%84%EB%A6%AC)
 - [2021 해돋이 개인프로젝트](https://github.com/favorcat/Zoom-Automation)
