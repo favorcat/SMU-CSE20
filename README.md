@@ -22,6 +22,12 @@
     - [Tacotron-Korean-Tensorflow2](https://github.com/favorcat/Tacotron-Korean-Tensorflow2)
     - [KSS-TTS](https://github.com/favorcat/KSS-TTS)
     - [yechani-TTS](https://github.com/favorcat/yechani-TTS)
+
+### 2022-2학기
+- 모바일 SW 프로젝트 (꼬르륵, 선문대 주변 음식점 안내 서비스)
+    - [꼬르륵 백엔드](https://github.com/favorcat/sun-menu-BE)
+    - [꼬르륵 프론트엔드](https://github.com/favorcat/sun-menu-FE)
+    - [꼬르륵 크롤러](https://github.com/favorcat/sun-menu-crawler)
 ### 전공동아리
 - [해돋이](https://github.com/favorcat/SMU-CSE20/tree/master/%ED%95%B4%EB%8F%8B%EC%9D%B4%20%EC%A0%84%EA%B3%B5%EB%8F%99%EC%95%84%EB%A6%AC)
 - [2021 해돋이 개인프로젝트](https://github.com/favorcat/Zoom-Automation)
