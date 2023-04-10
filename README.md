@@ -7,9 +7,11 @@
 - [데이터공학개론](https://github.com/favorcat/SMU-CSE20/tree/master/데이터공학개론)
 - [데이터구조](https://github.com/favorcat/SMU-CSE20/tree/master/데이터구조)
 - [알기쉬운 웹제작](https://github.com/favorcat/SMU-CSE20/tree/master/알기쉬운%20웹제작)
+- [기초프로젝트1 - Web](https://github.com/favorcat/Rkive)
+- [기초프로젝트1 - bot](https://github.com/favorcat/Rkive-bot)
 
 ### 2021-2학기
-- [기초프로젝트2](https://github.com/favorcat/SMU-CSE20/tree/master/Basic-Project2)
+- [기초프로젝트2 - Java](https://github.com/favorcat/SMU-CSE20/tree/master/Basic-Project2)
 
 ### 2022-PRE학기
 - [게임엔진기초](https://github.com/favorcat/Unity-newbie-code)
